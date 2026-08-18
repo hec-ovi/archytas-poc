@@ -3,7 +3,7 @@
 import pytest
 
 from document_parser import INVOICE_FIELDS, UnreadableFile, UnsupportedFormat
-from conftest import FIXTURES
+from .conftest import FIXTURES
 
 
 def test_el_tipo_se_decide_por_los_bytes_no_por_la_extension(parser, fixtures, tmp_path):

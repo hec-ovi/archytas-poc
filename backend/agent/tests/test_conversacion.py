@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from conftest import FakeModel
+from .conftest import FakeModel
 
 
 def test_una_pregunta_usa_la_herramienta_y_contesta_con_el_rastro(agent_with):

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from conftest import days_from_today
+from .conftest import days_from_today
 
 
 def test_la_posicion_de_un_proveedor_trae_la_deuda_calculada(registry):

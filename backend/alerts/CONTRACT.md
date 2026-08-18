@@ -49,11 +49,36 @@ sale la primera y la otra se descarta.
 | `reclamo_sin_responder` | mensaje `kind = reclamo` con `resolved = 0` | aviso | ninguno |
 | `revision_pendiente` | hay items pendientes en la cola de revision: un solo resumen por dia, no uno por item | aviso | ninguno |
 
+Todas menos `revision_pendiente` pueden levantar muchos eventos de una, asi que todas menos
+esa tienen su resumen. `aviso_maximo_por_regla` decide a partir de cuantos se usa.
+
 `recibo_faltante` y `factura_vencida` son urgentes porque las dos ya cuestan plata: pasada
 la fecha el recibo no se puede emitir, y una factura vencida es la llamada del proveedor.
 
 Los settings se leen de la tabla `setting` en cada pasada, asi que un cambio hecho a las
-nueve vale a las diez. Los valores por defecto son los que deja `store` al crear la base.
+nueve vale a las diez. Los valores por defecto son los que deja `store` al crear la base,
+salvo `aviso_maximo_por_regla`, cuyo defecto (5) vive en esta caja hasta que alguien lo
+escriba desde la pantalla de configuracion.
+
+## Cuando son muchos
+
+La base real tiene 69 facturas vencidas con saldo, 28 ordenes abiertas y 12 reclamos sin
+responder, algunos de 2023. Todo cierto, y todo junto son 109 mensajes de WhatsApp el primer
+dia: la misma bandeja que nadie abre, ahora en el telefono y con costo por mensaje.
+
+Por eso, cuando una regla levanta mas de `aviso_maximo_por_regla` eventos nuevos en una
+pasada (por defecto 5):
+
+- los eventos se levantan igual, uno por uno, deduplicados y visibles en pantalla;
+- sale **un solo resumen** en lugar de N mensajes, escrito con los datos del peor caso:
+  "69 facturas vencidas con saldo, por $22.529.634,00. La mas vieja: F-9045 de Ferretera del
+  Norte SRL, 1288 dias de atraso";
+- cada evento agrupado queda registrado como entregado por ese resumen, asi que el
+  reintento no los toma despues para mandarlos de a uno.
+
+Por debajo del umbral cada evento sale con su propio mensaje, como siempre. El reintento
+usa el mismo umbral: un canal caido mientras se juntaron setenta eventos no se convierte en
+setenta mensajes cuando vuelve.
 
 ## Que garantiza
 
@@ -63,7 +88,8 @@ nueve vale a las diez. Los valores por defecto son los que deja `store` al crear
 - **Solo se manda lo nuevo.** Un evento que ya existia no se vuelve a enviar.
 - **Una entidad, un aviso por pasada.** Una factura sin recibo y encima grande genera un
   solo mensaje: el de la regla de mayor prioridad.
-- **Toda entrega queda registrada**, salga o no, en `alert_delivery` con su motivo.
+- **Toda entrega queda registrada**, salga o no, en `alert_delivery` con su motivo. Un
+  evento que viajo dentro de un resumen queda entregado, con el resumen como motivo.
 - **Lo que fallo se reintenta.** En cada pasada, antes de evaluar nada, las entregas
   fallidas se mandan de nuevo a los destinatarios que fallaron, sin volver a disparar el
   evento.
@@ -74,9 +100,13 @@ nueve vale a las diez. Los valores por defecto son los que deja `store` al crear
 ## Los textos
 
 Cada regla tiene su archivo en `messages/<regla>.md`, leido al usar, nunca escrito en el
-codigo. La primera linea es el titulo y el resto es el cuerpo; los dos aceptan parametros
-con nombre (`{numero}`, `{monto}`, `{vencimiento}`) que completa la regla. Los montos se
-escriben con `format_amount` recien en ese momento: adentro siempre son centavos enteros.
+codigo, y las que pueden juntar muchos eventos tienen ademas su `messages/<regla>_resumen.md`.
+La primera linea es el titulo y el resto es el cuerpo; los dos aceptan parametros con nombre
+(`{numero}`, `{monto}`, `{vencimiento}`) que completa la regla.
+
+El resumen se completa con los parametros del peor evento del grupo mas `{cantidad}` y
+`{total}`, asi que tambien su redaccion queda en el archivo. Los montos se escriben con
+`format_amount` recien en ese momento: adentro siempre son centavos enteros.
 
 El nombre del archivo es tambien el nombre de la plantilla de WhatsApp que hay que aprobar
 en Meta, y los parametros del archivo son los parametros de la plantilla. El texto esta
@@ -95,6 +125,8 @@ comercial, y lo cobra a esa tarifa.
 | `entregas` | envios aceptados, incluidos los reintentos |
 | `entregas_fallidas` | envios rechazados, quedan para el proximo reintento |
 | `reintentos` | entregas fallidas que se volvieron a intentar |
+| `resumenes` | mensajes de resumen que reemplazaron a un grupo de avisos |
+| `eventos_agrupados` | eventos que viajaron dentro de un resumen |
 | `errores` | reglas que fallaron, en castellano |
 
 ## La programacion

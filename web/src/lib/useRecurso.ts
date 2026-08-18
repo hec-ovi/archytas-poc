@@ -1,6 +1,7 @@
 // Loading, error and reload for one api call. Every screen states what it is doing.
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 import { mensajeDeError } from './errors'
 
 export interface Recurso<T> {
@@ -9,7 +10,7 @@ export interface Recurso<T> {
   error: string | null
   recargar: () => void
   /** Patch what is already loaded without a round trip. */
-  fijar: (siguiente: T) => void
+  fijar: Dispatch<SetStateAction<T | null>>
 }
 
 export function useRecurso<T>(traer: () => Promise<T>, dependencias: unknown[] = []): Recurso<T> {

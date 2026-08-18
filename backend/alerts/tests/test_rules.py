@@ -7,7 +7,7 @@ what landed in `alert_event`.
 from __future__ import annotations
 
 from alerts import AlertEngine
-from conftest import TODAY, day
+from .conftest import TODAY, day
 
 
 def raised(store, rule: str) -> list[dict]:

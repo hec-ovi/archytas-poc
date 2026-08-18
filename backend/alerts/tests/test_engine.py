@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from alerts import AlertEngine
-from conftest import TODAY, FlakyChannel, day, outbox_lines
+from .conftest import TODAY, FlakyChannel, day, outbox_lines
 from notify import Notifier
 
 

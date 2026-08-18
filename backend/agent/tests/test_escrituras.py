@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from conftest import days_from_today
+from .conftest import days_from_today
 
 
 def test_un_pago_baja_el_saldo_y_queda_a_nombre_de_quien_lo_pidio(registry, store):

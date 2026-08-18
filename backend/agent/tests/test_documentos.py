@@ -5,7 +5,7 @@ from __future__ import annotations
 import openpyxl
 import pytest
 
-from conftest import days_from_today
+from .conftest import days_from_today
 
 
 @pytest.fixture
