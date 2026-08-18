@@ -39,12 +39,18 @@ export function PantallaCalendario() {
     [rango.desde, rango.hasta],
   )
 
-  /** The live channel is the only writer here besides this page's own actions. */
+  /**
+   * The live channel is the only writer here besides this page's own actions. The api answers
+   * a move with the bare row, so the supplier, the balance and the receipt flag already on
+   * screen are kept and only what changed is taken.
+   */
   const aplicar = useCallback((accion: string, evento: EventoCalendario) => {
     recurso.fijar((actual) => {
       if (!actual) return actual
+      const previo = actual.eventos.find((item) => item.id === evento.id)
+      const completo = previo ? { ...previo, ...evento } : evento
       const sinEse = actual.eventos.filter((item) => item.id !== evento.id)
-      const siguiente = accion === 'baja' || !enRango(evento.on_date) ? sinEse : [...sinEse, evento]
+      const siguiente = accion === 'baja' || !enRango(completo.on_date) ? sinEse : [...sinEse, completo]
       return { ...actual, eventos: siguiente }
     })
   }, [recurso, enRango])

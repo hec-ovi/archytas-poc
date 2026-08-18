@@ -171,7 +171,7 @@ Asi que se descubre desde las escrituras mismas, agrupandolas por parecido, y **
 queda como nombre bueno la escritura mas completa** (y entre iguales, la que no esta toda en
 mayusculas: el cliente lee esto en pantalla).
 
-**19 escrituras se agrupan en 7 rubros reales.**
+**18 escrituras distintas se agrupan en 7 rubros reales**, mas 8 productos que vinieron con el rubro en blanco.
 
 Para los 8 productos sin rubro se uso algo que ya estaba en los datos: la subcategoria esta
 siempre cargada, no tiene variantes, y mapea limpio a un rubro. Asi que un producto sin rubro

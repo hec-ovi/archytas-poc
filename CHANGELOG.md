@@ -8,7 +8,7 @@ Sistema completo de gestion para Ferreteria Industrial Cordillera.
   articulo, y las descargas con enlace firmado de 45 segundos.
 - **Normalizacion deterministica**: fechas en cualquier formato, montos argentinos en
   centavos, nombres de proveedor (24 de 25 escrituras se resuelven solas contra los 8
-  proveedores reales), rubros (19 escrituras agrupadas en 7), y duplicados separados entre
+  proveedores reales), rubros (18 escrituras agrupadas en 7), y duplicados separados entre
   los que se unifican solos y los que necesitan una persona.
 - **Cola de revision**: todo lo que el sistema no resuelve queda esperando una confirmacion,
   con los candidatos y su puntaje. Una decision tomada se recuerda como alias.

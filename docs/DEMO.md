@@ -88,7 +88,7 @@ Resolver uno de un clic y ver que el total del mes cambia en el acto.
 | Dato | Valor |
 |---|---|
 | Escrituras de proveedor unificadas | 25 a 8 (24 automaticas) |
-| Escrituras de rubro unificadas | 19 a 7 |
+| Escrituras de rubro unificadas | 18 a 7 |
 | Productos sin rubro despues de normalizar | 0 (eran 8) |
 | Ventas leidas / que suman | 561 / 515 |
 | Codigos repetidos | 27: 21 se unifican solos, 6 esperan decision |
