@@ -25,6 +25,7 @@ DEFAULT_SETTINGS: list[tuple[str, Any, str]] = [
     ("aviso_monto_minimo", 10000000, "Monto en centavos a partir del cual avisar"),
     ("orden_vieja_dias", 30, "A los cuantos dias una orden sin recibir se considera olvidada"),
     ("recibo_dias_antes", 5, "Cuantos dias antes del vencimiento reclamar el recibo faltante"),
+    ("aviso_maximo_por_regla", 5, "Cuantos avisos sueltos manda una regla antes de mandar un resumen"),
 ]
 
 

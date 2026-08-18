@@ -4,4 +4,4 @@ Marca un mensaje de la bandeja como resuelto, con el nombre de quien lo cerro.
 El id del mensaje, tal como lo devuelve la consulta de mensajes.
 
 ## nota
-En pocas palabras, como se resolvio.
+Como se resolvio, para que quede escrito en el mensaje.

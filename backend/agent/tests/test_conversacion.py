@@ -6,7 +6,7 @@ from .conftest import FakeModel
 
 
 def test_una_pregunta_usa_la_herramienta_y_contesta_con_el_rastro(agent_with):
-    agent, model = agent_with(
+    agent, _ = agent_with(
         [
             FakeModel.calls("consultar_proveedor", proveedor="Herramientas Cuyo"),
             FakeModel.says("Le debemos $700.000,00 a Herramientas Cuyo SRL."),
@@ -42,7 +42,7 @@ def test_nunca_se_manda_un_limite_de_salida(agent_with):
 
 
 def test_un_modelo_que_no_para_de_pedir_herramientas_corta_solo(agent_with):
-    agent, model = agent_with([FakeModel.calls("consultar_deudas")], max_turns=3)
+    agent, _ = agent_with([FakeModel.calls("consultar_deudas")], max_turns=3)
 
     answer = agent.ask("cuanto debemos?", user="marcela")
 
@@ -52,7 +52,7 @@ def test_un_modelo_que_no_para_de_pedir_herramientas_corta_solo(agent_with):
 
 
 def test_una_herramienta_que_no_existe_no_corta_la_conversacion(agent_with):
-    agent, model = agent_with(
+    agent, _ = agent_with(
         [FakeModel.calls("borrar_todo"), FakeModel.says("No puedo hacer eso.")]
     )
 

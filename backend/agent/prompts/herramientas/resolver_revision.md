@@ -10,4 +10,4 @@ El identificador del proveedor elegido, por ejemplo `herramientas-cuyo-srl`. Sol
 pendiente es por un proveedor sin identificar.
 
 ## nota
-En pocas palabras, que se decidio.
+Que se decidio, para que quede escrito en el pendiente.

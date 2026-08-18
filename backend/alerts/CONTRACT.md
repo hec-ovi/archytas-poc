@@ -63,8 +63,9 @@ escriba desde la pantalla de configuracion.
 ## Cuando son muchos
 
 La base real tiene 69 facturas vencidas con saldo, 28 ordenes abiertas y 12 reclamos sin
-responder, algunos de 2023. Todo cierto, y todo junto son 109 mensajes de WhatsApp el primer
-dia: la misma bandeja que nadie abre, ahora en el telefono y con costo por mensaje.
+responder, algunos de 2023. Todo cierto, y todo junto son 110 mensajes de WhatsApp el primer
+dia: la misma bandeja que nadie abre, ahora en el telefono y con costo por mensaje. Con el
+umbral por defecto salen 4.
 
 Por eso, cuando una regla levanta mas de `aviso_maximo_por_regla` eventos nuevos en una
 pasada (por defecto 5):
