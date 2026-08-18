@@ -57,10 +57,12 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # the UI runs on its own port in development; in the container both are same origin
+    # the UI is served from its own port, so it is a different origin than the api even on
+    # the same machine. Which ones are allowed comes from CORS_ORIGINS, because baking a
+    # port into the code means changing it breaks the login with no clue why.
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+        allow_origins=list(Settings.from_env().cors_origins),
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

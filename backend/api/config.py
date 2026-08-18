@@ -11,6 +11,17 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
+# where the UI runs in development. In the container both sides are the same origin, so this
+# only matters when the two are served from different ports.
+DEFAULT_ORIGINS = ("http://localhost:5173", "http://127.0.0.1:5173")
+
+
+def _origins(raw: str) -> tuple[str, ...]:
+    """Origins allowed to call the api, from a comma separated list."""
+    listed = tuple(origin.strip().rstrip("/") for origin in raw.split(",") if origin.strip())
+    return listed or DEFAULT_ORIGINS
+
+
 @dataclass(frozen=True)
 class Settings:
     data_dir: Path
@@ -22,6 +33,7 @@ class Settings:
     llm_base_url: str
     llm_model: str
     llm_api_key: str
+    cors_origins: tuple[str, ...]
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -37,4 +49,5 @@ class Settings:
             llm_base_url=os.getenv("LLM_BASE_URL", "http://host.docker.internal:8080/v1"),
             llm_model=os.getenv("LLM_MODEL", "gemma-4-26b-a4b-qat-q4"),
             llm_api_key=os.getenv("LLM_API_KEY", ""),
+            cors_origins=_origins(os.getenv("CORS_ORIGINS", "")),
         )
