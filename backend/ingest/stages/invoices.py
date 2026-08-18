@@ -23,8 +23,14 @@ from store import Store
 class InvoiceStage:
     name = "facturas"
 
-    # what the portal calls the file it holds, mapped to how we parse that file later
-    SOURCE_KINDS = {"Excel": "excel", "PDF": "pdf", "PDF escaneado": "pdf-escaneado"}
+    # what the portal calls the file it holds, mapped to how we parse that file later.
+    # 46 of the 100 invoices are photos of paper, so getting this label right is what tells
+    # the screen (and whoever opens it) that reading it needs OCR.
+    SOURCE_KINDS = {
+        "Excel": "excel",
+        "PDF": "pdf",
+        "PDF (escaneado)": "pdf-escaneado",
+    }
 
     def __init__(self, store: Store, suppliers: SupplierResolver, review: ReviewQueue):
         self._store = store
@@ -62,7 +68,7 @@ class InvoiceStage:
                     "issued_on": issued.value,
                     "due_on": due.value,
                     "amount_cents": amount.value or 0,
-                    "source_kind": self.SOURCE_KINDS.get(row.get("tipo", ""), "portal"),
+                    "source_kind": self._source_kind(row.get("tipo", ""), report),
                     "status": "vigente" if supplier_id else "en-revision",
                     "extra": {"tipo_archivo": row.get("tipo"), "texto_producto": row.get("productoTexto")},
                 }
@@ -89,6 +95,15 @@ class InvoiceStage:
             )
 
         report.note("los dias de atraso no se guardan: cambian solos todas las noches y se calculan al leer")
+
+    def _source_kind(self, raw: str, report: StageReport) -> str:
+        """A file format we do not know about is worth saying out loud, not swallowing."""
+        known = self.SOURCE_KINDS.get(raw.strip())
+        if known:
+            return known
+        if raw.strip():
+            report.note(f"tipo de archivo que el portal usa y no estaba previsto: {raw!r}")
+        return "portal"
 
 
 class PaymentStage:

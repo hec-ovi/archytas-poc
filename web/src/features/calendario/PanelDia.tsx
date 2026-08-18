@@ -5,6 +5,15 @@ import { Panel } from '../../ui/Panel'
 import { Vacio } from '../../ui/Estado'
 import type { EventoCalendario } from '../../lib/types'
 
+/** The second line only exists when it says something the title does not. */
+function detalle(evento: EventoCalendario): string {
+  const partes = [
+    evento.invoice_number ? `Factura ${evento.invoice_number}` : evento.supplier_name ? evento.title : '',
+    evento.note,
+  ].filter(Boolean)
+  return partes.join(' · ')
+}
+
 interface Props {
   dia: string
   eventos: EventoCalendario[]
@@ -33,10 +42,9 @@ export function PanelDia({ dia, eventos, onAbrirEvento, onBorrar, onAgregar }: P
               <div className="fila" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{ minWidth: 0 }}>
                   <div className="fuerte">{evento.supplier_name ?? evento.title}</div>
-                  <div className="tenue" style={{ fontSize: 11.5 }}>
-                    {evento.invoice_number ? `Factura ${evento.invoice_number}` : evento.title}
-                    {evento.note ? ` · ${evento.note}` : ''}
-                  </div>
+                  {detalle(evento) ? (
+                    <div className="tenue" style={{ fontSize: 11.5 }}>{detalle(evento)}</div>
+                  ) : null}
                   <div className="fila" style={{ gap: 6, marginTop: 4 }}>
                     {evento.kind === 'vencimiento' ? (
                       <>

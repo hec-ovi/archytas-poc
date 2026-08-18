@@ -44,7 +44,7 @@ FACTURAS = [
      "productoId": "p1", "productoTexto": "", "pagado": "$0", "saldo": "$100.000",
      "estadoPago": "Impaga", "diasVencida": 99},
     {"id": "f2", "proveedor": "ACEROS BELGRANO", "numero": "F-2", "fecha": ISSUED,
-     "monto": "$50.000", "tipo": "Excel", "vencimiento": UPCOMING, "reciboGenerado": False,
+     "monto": "$50.000", "tipo": "PDF (escaneado)", "vencimiento": UPCOMING, "reciboGenerado": False,
      "productoId": "p2", "productoTexto": "", "pagado": "$0", "saldo": "$50.000",
      "estadoPago": "Impaga", "diasVencida": 0},
 ]
@@ -151,6 +151,13 @@ class TestInvoices:
         store, _ = result
         assert store.receipts.for_invoice(store.invoices.by_external("f1")["id"]) is not None
         assert store.receipts.for_invoice(store.invoices.by_external("f2")["id"]) is None
+
+    def test_each_invoice_keeps_the_format_its_file_is_in(self, result):
+        """46 of the 100 real invoices are photos of paper. Losing that label loses the
+        only signal that reading one needs OCR."""
+        store, _ = result
+        assert store.invoices.by_external("f1")["source_kind"] == "pdf"
+        assert store.invoices.by_external("f2")["source_kind"] == "pdf-escaneado"
 
     def test_every_due_date_lands_on_the_calendar(self, result):
         store, _ = result
