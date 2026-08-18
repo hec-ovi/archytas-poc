@@ -15,7 +15,7 @@ contrato: nadie lee el codigo de otra caja.
 | `store` | SQLite: esquema, repositorios, cola de revision, procedencia de cada dato. | - |
 | `document_parser` | Archivo (PDF texto, PDF escaneado, Excel desprolijo) a campos de factura. OCR y extraccion asistida cuando el texto no alcanza. | `normalizer` |
 | `ingest` | Orquesta: trae del portal, normaliza, guarda idempotente. Tambien procesa archivos subidos. | `portal_sync`, `normalizer`, `store`, `document_parser` |
-| `agent` | El modelo con herramientas para cargar, consultar y actualizar. Corre con el rol de quien pregunta y devuelve el rastro de lo que hizo. Habla con cualquier servidor compatible con OpenAI; por defecto el llama.cpp local. | `store`, `normalizer`, `document_parser` |
+| `agent` | El modelo con herramientas para cargar, consultar y actualizar. Corre con el rol de quien pregunta y devuelve el rastro de lo que hizo. Habla con cualquier servidor compatible con OpenAI; por defecto el llama.cpp local. | `store`, `normalizer`, `document_parser`, `ingest` |
 | `alerts` | Reglas de evento (vence pronto, impaga, sin recibo, orden olvidada, reclamo sin responder) y su programacion. | `store`, `notify`, `normalizer` |
 | `notify` | Entrega de mensajes por canal: WhatsApp, Telegram y bandeja local. Sin credenciales cae en la bandeja. | - |
 | `api` | HTTP y WebSocket. Usuarios, roles, y toda la superficie que consume la UI. | `store`, `ingest`, `agent`, `alerts`, `notify` |

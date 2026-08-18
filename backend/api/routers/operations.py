@@ -147,14 +147,25 @@ def _apply_review(store: Store, item: dict, decision: dict, username: str) -> st
             store.products.update(product["id"], {"category_id": category["id"]})
         return f"la escritura {spelling!r} queda como {category['name']}"
 
-    if kind in ("venta-duplicada", "venta-rota") and decision.get("codigo_valido"):
+    code = item["dedupe_key"].split(":", 1)[1]
+
+    if kind == "venta-duplicada" and decision.get("codigo_valido"):
         keep = decision.get("row_hash")
-        for sale in store.sales.by_code(item["dedupe_key"].split(":", 1)[1]):
+        for sale in store.sales.by_code(code):
             store.sales.flag(
                 sale["id"],
                 "valida" if sale["row_hash"] == keep else "duplicada",
                 f"decidido por {username}",
             )
         return "la venta elegida vuelve a sumar y las otras quedan marcadas como duplicadas"
+
+    if kind == "venta-rota" and decision.get("valor_elegido") is not None:
+        # the proposal is quantity times unit price, which the system worked out but refused
+        # to apply on its own. Accepting it is the person taking responsibility for the number.
+        corrected = int(decision["valor_elegido"])
+        for sale in store.sales.by_code(code):
+            store.sales.update(sale["id"], {"total_cents": corrected})
+            store.sales.flag(sale["id"], "valida", f"total corregido a mano por {username}")
+        return f"la venta {code} vuelve a sumar con el total corregido"
 
     return "sin cambios automaticos: queda registrado quien lo reviso"

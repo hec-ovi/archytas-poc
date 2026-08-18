@@ -162,6 +162,33 @@ class TestLoQueHaceUnaPersona:
         assert after == before + keep["total_cents"]
         assert item["id"] not in {p["id"] for p in client.get("/api/revision").json()["pendientes"]}
 
+    def test_accepting_the_correction_puts_a_broken_sale_back_in_the_totals(self, client):
+        login(client)
+        sync(client)
+        store = client.app.state.store
+
+        pending = client.get("/api/revision?tipo=venta-rota").json()["pendientes"]
+        item = next(p for p in pending if p["candidates"])
+        proposal = item["candidates"][0]["valor"]
+
+        before = sum(m["revenue_cents"] for m in store.sales.revenue_by_month())
+        response = client.post(f"/api/revision/{item['id']}/resolver",
+                               json={"decision": {"valor_elegido": proposal}})
+        assert response.status_code == 200
+        assert "vuelve a sumar" in response.json()["aplicado"]
+
+        after = sum(m["revenue_cents"] for m in store.sales.revenue_by_month())
+        assert after == before + proposal
+
+    def test_a_broken_sale_with_no_proposal_is_only_recorded(self, client):
+        login(client)
+        sync(client)
+        pending = client.get("/api/revision?tipo=venta-rota").json()["pendientes"]
+        item = next(p for p in pending if not p["candidates"])
+        response = client.post(f"/api/revision/{item['id']}/resolver", json={"decision": {}})
+        assert response.status_code == 200
+        assert "sin cambios automaticos" in response.json()["aplicado"]
+
     def test_a_confirmed_spelling_is_remembered(self, client):
         login(client)
         sync(client)
