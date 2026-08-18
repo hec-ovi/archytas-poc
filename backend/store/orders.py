@@ -11,8 +11,8 @@ from typing import Any
 
 from .base import Repository, decode_all
 
-# what the portal writes, grouped into the three states that matter to the client
-OPEN_STATES = ("pendiente", "confirmada")
+# an order stops needing follow-up only when it arrived or was cancelled. Everything else,
+# whatever the portal calls it, is still waiting on somebody.
 CLOSED_STATES = ("recibida", "anulada")
 
 
@@ -46,11 +46,11 @@ class PurchaseOrderRepository(Repository):
                        CAST(julianday('now') - julianday(o.ordered_on) AS INTEGER) AS age_days
                 FROM purchase_order o
                 LEFT JOIN supplier s ON s.id = o.supplier_id
-                WHERE o.status NOT IN ('recibida', 'anulada')
+                WHERE o.status NOT IN ({placeholders})
                   AND julianday('now') - julianday(o.ordered_on) > ?
                 ORDER BY o.ordered_on
-                """,
-                (older_than_days,),
+                """.format(placeholders=", ".join("?" for _ in CLOSED_STATES)),
+                (*CLOSED_STATES, older_than_days),
             )
         )
 
