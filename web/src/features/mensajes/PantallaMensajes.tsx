@@ -12,13 +12,8 @@ import { Campo } from '../../ui/Campo'
 import { Bloque, Vacio } from '../../ui/Estado'
 import { ModalFactura } from '../facturas/ModalFactura'
 import { FilaMensaje } from './FilaMensaje'
+import { TIPO_MENSAJE } from '../../lib/etiquetas'
 import './mensajes.css'
-
-const TIPO_TEXTO: Record<string, string> = {
-  reclamo: 'Reclamos',
-  vencimiento: 'Vencimientos',
-  stock: 'Stock',
-}
 
 export function PantallaMensajes() {
   const [soloAbiertos, setSoloAbiertos] = useState(true)
@@ -68,7 +63,7 @@ export function PantallaMensajes() {
               {datos.por_tipo.map((fila) => (
                 <Metrica
                   key={fila.kind}
-                  rotulo={TIPO_TEXTO[fila.kind] ?? fila.kind}
+                  rotulo={TIPO_MENSAJE[fila.kind] ?? fila.kind}
                   valor={numero(fila.open)}
                   pie={`${numero(fila.n)} en total`}
                 />
@@ -87,7 +82,7 @@ export function PantallaMensajes() {
                       <option value="">Todos los tipos</option>
                       {datos.por_tipo.map((fila) => (
                         <option key={fila.kind} value={fila.kind}>
-                          {TIPO_TEXTO[fila.kind] ?? fila.kind} ({fila.n})
+                          {TIPO_MENSAJE[fila.kind] ?? fila.kind} ({fila.n})
                         </option>
                       ))}
                     </select>

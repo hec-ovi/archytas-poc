@@ -14,12 +14,15 @@ from __future__ import annotations
 from datetime import date
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import Response
 from pydantic import BaseModel, Field
 
 from normalizer.money import format_amount
+from portal_sync.downloads import PortalDownloader
+from portal_sync.errors import PortalError
 from store import Store
 
-from ..deps import get_hub, get_store
+from ..deps import get_hub, get_settings, get_store, open_portal
 from ..realtime import Hub
 from ..security import requires
 
@@ -58,6 +61,39 @@ def detail(invoice_id: int, store: Store = Depends(get_store),
         "recibo": store.receipts.for_invoice(invoice_id),
         "cruda": store.invoices.get(invoice_id),
     }
+
+
+@router.get("/{invoice_id}/archivo")
+def original_file(invoice_id: int, store: Store = Depends(get_store), settings=Depends(get_settings),
+                  user: dict = Depends(requires("facturas"))) -> Response:
+    """The invoice as the supplier sent it.
+
+    Fetched from the portal at the moment it is asked for, because its download link is only
+    valid for 45 seconds. Downloading all hundred on every pass would be a hundred requests
+    for files almost nobody opens.
+    """
+    invoice = store.invoices.get(invoice_id)
+    if invoice is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "No existe esa factura")
+    if not invoice.get("external_id"):
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            f"La factura {invoice['number']} no vino del portal, se cargo desde un archivo propio",
+        )
+
+    session, _ = open_portal(settings)
+    try:
+        downloaded = PortalDownloader(session).fetch("factura", invoice["external_id"])
+    except PortalError as error:
+        raise HTTPException(status.HTTP_502_BAD_GATEWAY, f"El portal no entrego el archivo: {error}")
+    finally:
+        session.close()
+
+    return Response(
+        content=downloaded.content,
+        media_type=downloaded.content_type,
+        headers={"Content-Disposition": f'inline; filename="{downloaded.filename}"'},
+    )
 
 
 @router.post("/{invoice_id}/pagos", status_code=status.HTTP_201_CREATED)

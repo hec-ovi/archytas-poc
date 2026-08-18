@@ -45,6 +45,7 @@ no la URL.
 ### Facturas (`facturas`)
 | GET | `/api/facturas?estado=&proveedor=` | listado. `estado` es `impaga`, `parcial` o `saldada` |
 | GET | `/api/facturas/{id}` | la factura, sus pagos y su recibo |
+| GET | `/api/facturas/{id}/archivo` | la factura original como la mando el proveedor. Se baja del portal en el momento, porque el enlace vive 45 segundos |
 | POST | `/api/facturas/{id}/pagos` | registra un pago a cuenta. `{monto_centavos, fecha?, referencia?}`. Rechaza un pago mayor al saldo |
 | POST | `/api/facturas/{id}/recibo` | emite el comprobante de recepcion. Rechaza si la factura ya vencio |
 | PATCH | `/api/facturas/{id}` | ajusta el monto. `{monto_centavos, motivo}`. Guarda quien, cuando y por que |

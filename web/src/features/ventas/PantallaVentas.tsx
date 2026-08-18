@@ -9,14 +9,8 @@ import { TablaCaja } from '../../ui/Tabla'
 import { SerieMensual } from '../../ui/graficos/SerieMensual'
 import { BarrasCategoria } from '../../ui/graficos/BarrasCategoria'
 import { BarraProporcion } from '../../ui/graficos/BarraProporcion'
+import { ESTADO_VENTA } from '../../lib/etiquetas'
 import { PanelExcluidas } from './PanelExcluidas'
-
-const NOMBRE_SALUD: Record<string, string> = {
-  valida: 'Suman al total',
-  conflicto: 'En conflicto',
-  rota: 'Datos rotos',
-  duplicada: 'Duplicadas',
-}
 
 export function PantallaVentas() {
   const recurso = useRecurso(() => api.ventas(), [])
@@ -73,7 +67,7 @@ export function PantallaVentas() {
                   <BarraProporcion
                     tramos={Object.entries(datos.salud).map(([clave, valor]) => ({
                       clave,
-                      texto: NOMBRE_SALUD[clave] ?? clave,
+                      texto: ESTADO_VENTA[clave] ?? clave,
                       cantidad: valor.count,
                       centavos: valor.cents,
                     }))}

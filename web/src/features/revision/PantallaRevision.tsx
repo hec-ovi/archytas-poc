@@ -12,14 +12,8 @@ import { Pestanias } from '../../ui/Pestanias'
 import { Bloque, Vacio } from '../../ui/Estado'
 import { TarjetaPendiente } from './TarjetaPendiente'
 import type { VentaExcluida } from '../../lib/types'
+import { TIPO_REVISION } from '../../lib/etiquetas'
 import './revision.css'
-
-const TIPO_TEXTO: Record<string, string> = {
-  'venta-duplicada': 'Ventas duplicadas',
-  'venta-rota': 'Ventas rotas',
-  proveedor: 'Proveedores',
-  rubro: 'Rubros',
-}
 
 export function PantallaRevision() {
   const recurso = useRecurso(() => api.revision.listar(), [])
@@ -95,7 +89,7 @@ export function PantallaRevision() {
       { clave: '', texto: 'Todo', cuenta: vivos.length },
       ...tipos.map((kind) => ({
         clave: kind,
-        texto: TIPO_TEXTO[kind] ?? kind,
+        texto: TIPO_REVISION[kind] ?? kind,
         cuenta: vivos.filter((item) => item.kind === kind).length,
       })),
     ]

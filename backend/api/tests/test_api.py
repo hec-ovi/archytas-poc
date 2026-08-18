@@ -87,6 +87,21 @@ class TestPayments:
         assert "supera el saldo" in response.json()["detail"]
 
 
+class TestOriginalFile:
+    def test_an_invoice_loaded_by_hand_has_no_portal_file(self, client):
+        login(client, "marcela")
+        # the seeded invoices carry an external_id, so one without it is the manual case
+        store = client.app.state.store
+        manual = store.invoices.save({"number": "F-MANO", "amount_cents": 1000, "issued_on": "2026-01-01"})
+        response = client.get(f"/api/facturas/{manual}/archivo")
+        assert response.status_code == 404
+        assert "no vino del portal" in response.json()["detail"]
+
+    def test_an_invoice_that_does_not_exist_says_so(self, client):
+        login(client, "marcela")
+        assert client.get("/api/facturas/9999/archivo").status_code == 404
+
+
 class TestReceipts:
     def test_a_receipt_can_be_issued_before_the_due_date(self, client):
         login(client, "marcela")

@@ -8,14 +8,8 @@ import { Panel } from '../../ui/Panel'
 import { Metrica } from '../../ui/Metrica'
 import { Campo } from '../../ui/Campo'
 import { Bloque } from '../../ui/Estado'
+import { ESTADO_ORDEN } from '../../lib/etiquetas'
 import { TablaOrdenes } from './TablaOrdenes'
-
-const NOMBRE_ESTADO: Record<string, string> = {
-  'por-enviar': 'Por enviar',
-  enviada: 'Enviada',
-  confirmada: 'Confirmada',
-  recibida: 'Recibida',
-}
 
 export function PantallaOrdenes() {
   const recurso = useRecurso(() => api.ordenes(), [])
@@ -54,7 +48,7 @@ export function PantallaOrdenes() {
               {datos.por_estado.map((fila) => (
                 <Metrica
                   key={fila.status}
-                  rotulo={NOMBRE_ESTADO[fila.status] ?? fila.status}
+                  rotulo={ESTADO_ORDEN[fila.status] ?? fila.status}
                   valor={numero(fila.n)}
                   pie={pesos(fila.cents)}
                 />
@@ -85,7 +79,7 @@ export function PantallaOrdenes() {
                       <option value="">Todos los estados</option>
                       {datos.por_estado.map((fila) => (
                         <option key={fila.status} value={fila.status}>
-                          {NOMBRE_ESTADO[fila.status] ?? fila.status} ({fila.n})
+                          {ESTADO_ORDEN[fila.status] ?? fila.status} ({fila.n})
                         </option>
                       ))}
                     </select>

@@ -5,13 +5,8 @@ import { Panel } from '../../ui/Panel'
 import { Campo } from '../../ui/Campo'
 import { TablaCaja } from '../../ui/Tabla'
 import { Vacio } from '../../ui/Estado'
+import { ESTADO_VENTA } from '../../lib/etiquetas'
 import type { VentaExcluida } from '../../lib/types'
-
-const NOMBRE: Record<string, string> = {
-  conflicto: 'En conflicto',
-  rota: 'Datos rotos',
-  duplicada: 'Duplicada',
-}
 
 /** The client asked to be told which sales are broken instead of having them summed. */
 export function PanelExcluidas({ excluidas }: { excluidas: VentaExcluida[] }) {
@@ -34,7 +29,7 @@ export function PanelExcluidas({ excluidas }: { excluidas: VentaExcluida[] }) {
             <option value="">Todos los motivos</option>
             {tipos.map((tipo) => (
               <option key={tipo} value={tipo}>
-                {NOMBRE[tipo] ?? tipo} ({excluidas.filter((v) => v.status === tipo).length})
+                {ESTADO_VENTA[tipo] ?? tipo} ({excluidas.filter((v) => v.status === tipo).length})
               </option>
             ))}
           </select>
@@ -73,7 +68,7 @@ export function PanelExcluidas({ excluidas }: { excluidas: VentaExcluida[] }) {
                   <td className="num">{pesos(venta.total_cents)}</td>
                   <td>
                     <Chapa tono={venta.status === 'rota' ? 'impaga' : 'parcial'}>
-                      {NOMBRE[venta.status] ?? venta.status}
+                      {ESTADO_VENTA[venta.status] ?? venta.status}
                     </Chapa>
                   </td>
                   <td className="ancho">{venta.status_note}</td>
