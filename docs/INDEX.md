@@ -15,7 +15,7 @@ contrato: nadie lee el codigo de otra caja.
 | `store` | SQLite: esquema, repositorios, cola de revision, procedencia de cada dato. | - |
 | `document_parser` | Archivo (PDF texto, PDF escaneado, Excel desprolijo) a campos de factura. OCR y extraccion asistida cuando el texto no alcanza. | `normalizer` |
 | `ingest` | Orquesta: trae del portal, normaliza, guarda idempotente. Tambien procesa archivos subidos. | `portal_sync`, `normalizer`, `store`, `document_parser` |
-| `agent` | LLM via OpenRouter con herramientas: cargar, consultar y actualizar documentos. Entra donde hace falta criterio. | `store`, `normalizer`, `document_parser` |
+| `agent` | El modelo con herramientas para cargar, consultar y actualizar. Corre con el rol de quien pregunta y devuelve el rastro de lo que hizo. Habla con cualquier servidor compatible con OpenAI; por defecto el llama.cpp local. | `store`, `normalizer`, `document_parser` |
 | `alerts` | Reglas de evento (vence pronto, impaga, sin recibo, orden olvidada, reclamo sin responder) y su programacion. | `store`, `notify`, `normalizer` |
 | `notify` | Entrega de mensajes por canal: WhatsApp, Telegram y bandeja local. Sin credenciales cae en la bandeja. | - |
 | `api` | HTTP y WebSocket. Usuarios, roles, y toda la superficie que consume la UI. | `store`, `ingest`, `agent`, `alerts`, `notify` |
@@ -24,8 +24,12 @@ contrato: nadie lee el codigo de otra caja.
 
 | Caja | Que hace | Depende de |
 |---|---|---|
-| `web` | UI en Vite. Sub-cajas: tablero, proveedores, facturas, calendario, revision, configuracion. | contrato de `api` |
+| `web` | UI en React sobre Vite. Una sub-caja por pantalla: `login`, `tablero`, `proveedores`, `facturas`, `calendario`, `ordenes`, `ventas`, `productos`, `revision`, `mensajes`, `configuracion`. Debajo, `ui` (los componentes comunes) y `lib` (cliente HTTP, formato y canal en vivo). | contrato de `api` |
 
-## Estado
+## Como leerlo
 
-En construccion. Este mapa se actualiza con cada caja que entra.
+Para entender o cambiar algo: este mapa, y despues el `CONTRACT.md` de la caja que toca. El
+codigo de una caja solo se abre cuando es esa la que se esta cambiando.
+
+Un cambio entra en una caja (mas este archivo, si cambia el mapa). Si una caja necesita algo
+que otra no da, primero se agrega al contrato de esa otra, y despues se consume.
