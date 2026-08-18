@@ -12,13 +12,16 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
+from agent import Agent
 from alerts import AlertEngine, AlertScheduler
 from notify import Notifier
 from store import Store
 
 from .config import Settings
 from .realtime import Hub
-from .routers import analytics, auth, calendar, dashboard, documents, invoices, operations, suppliers, sync
+from .routers import (
+    analytics, assistant, auth, calendar, dashboard, documents, invoices, operations, suppliers, sync,
+)
 from .security import SessionSigner
 
 
@@ -32,6 +35,7 @@ async def lifespan(app: FastAPI):
 
     # alerts run on their own clock: the client asked to change how often without calling
     # anyone, so the interval is a setting the scheduler re-reads, not a constant
+    app.state.agent = Agent(app.state.store)
     app.state.notifier = Notifier.from_env()
     app.state.alerts = AlertEngine(app.state.store, app.state.notifier)
     app.state.scheduler = AlertScheduler(app.state.alerts, app.state.store)
@@ -40,6 +44,7 @@ async def lifespan(app: FastAPI):
     yield
 
     app.state.scheduler.stop()
+    app.state.agent.close()
     app.state.notifier.close()
     app.state.store.close()
 
@@ -61,7 +66,8 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    for module in (auth, dashboard, suppliers, invoices, calendar, operations, analytics, sync, documents):
+    for module in (auth, dashboard, suppliers, invoices, calendar, operations,
+                   analytics, sync, documents, assistant):
         app.include_router(module.router)
 
     @app.get("/api/salud", tags=["salud"])

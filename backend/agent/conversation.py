@@ -30,6 +30,7 @@ class Agent:
     def __init__(self, store: Store, settings: AgentSettings | None = None,
                  client: ChatClient | None = None, registry: ToolRegistry | None = None,
                  prompts: PromptLibrary | None = None):
+        self._store = store
         self._settings = settings or AgentSettings.from_env()
         self._prompts = prompts or PromptLibrary()
         self._registry = registry or ToolRegistry(store, self._prompts)
@@ -37,7 +38,10 @@ class Agent:
 
     def ask(self, question: str, user: str = "", rol: str = DEFAULT_ROLE) -> Answer:
         system = self._prompts.system(
-            hoy=date.today().isoformat(), usuario=user or "alguien", rol=rol
+            hoy=date.today().isoformat(),
+            usuario=user or "alguien",
+            rol=rol,
+            secciones=", ".join(self._store.users.sections_for(rol)) or "nada",
         )
         messages = [
             {"role": "system", "content": system},

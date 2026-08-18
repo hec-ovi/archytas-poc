@@ -60,3 +60,13 @@ def test_una_herramienta_que_no_existe_no_corta_la_conversacion(agent_with):
 
     assert answer.text == "No puedo hacer eso."
     assert answer.steps[0].failed is True
+
+
+def test_el_prompt_del_sistema_llega_completo(agent_with):
+    agent, model = agent_with([FakeModel.says("Hola.")])
+
+    agent.ask("hola", user="julian", rol="ventas")
+
+    system = model.requests[0]["messages"][0]["content"]
+    assert "julian" in system and "ventas" in system
+    assert "{" not in system, "quedo un hueco sin completar en el prompt"
