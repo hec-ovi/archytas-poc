@@ -29,6 +29,7 @@ SOURCE_KINDS = {"pdf-texto": "pdf", "ocr": "pdf-escaneado", "xlsx": "excel"}
 
 class CargarDocumento(Tool):
     name = "cargar_documento"
+    section = "facturas"
     needs_user = True
     parameters = (Parameter("documento_id", "integer", required=True),)
 

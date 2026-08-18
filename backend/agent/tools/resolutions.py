@@ -15,6 +15,7 @@ from .base import Parameter, Tool
 
 class ResolverRevision(Tool):
     name = "resolver_revision"
+    section = "revision"
     needs_user = True
     parameters = (
         Parameter("pendiente_id", "integer", required=True),
@@ -65,6 +66,7 @@ class ResolverRevision(Tool):
 
 class ResolverMensaje(Tool):
     name = "resolver_mensaje"
+    section = "mensajes"
     needs_user = True
     parameters = (
         Parameter("mensaje_id", "integer", required=True),

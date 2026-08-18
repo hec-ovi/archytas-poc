@@ -23,6 +23,7 @@ DEFAULT_DAYS_AHEAD = 30
 
 class ConsultarFacturas(Tool):
     name = "consultar_facturas"
+    section = "facturas"
     parameters = (
         Parameter("estado", "string", enum=STATES),
         Parameter("proveedor", "string"),
@@ -53,6 +54,7 @@ class ConsultarFacturas(Tool):
 
 class ConsultarFactura(Tool):
     name = "consultar_factura"
+    section = "facturas"
     parameters = (
         Parameter("factura", "string", required=True),
         Parameter("proveedor", "string"),
@@ -81,6 +83,7 @@ class ConsultarRecibosFaltantes(Tool):
     """
 
     name = "consultar_recibos_faltantes"
+    section = "facturas"
     parameters = (Parameter("dias_adelante", "integer"),)
 
     def run(self, dias_adelante: object = None, **_: Any) -> dict[str, Any]:

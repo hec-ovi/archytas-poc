@@ -28,6 +28,7 @@ class InvoiceWriteTool(Tool):
     """Shared ground: find the invoice, and refuse to write for nobody."""
 
     needs_user = True
+    section = "facturas"
 
     def __init__(self, store: Store, prompts: PromptLibrary, invoices: InvoiceLookup):
         super().__init__(store, prompts)

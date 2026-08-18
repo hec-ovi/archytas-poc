@@ -14,6 +14,7 @@ MAX_ROWS = 40
 
 class ConsultarProductos(Tool):
     name = "consultar_productos"
+    section = "productos"
     parameters = (
         Parameter("buscar", "string"),
         Parameter("stock_maximo", "integer"),

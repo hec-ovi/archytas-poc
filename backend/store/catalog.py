@@ -127,13 +127,35 @@ class PriceHistoryRepository(Repository):
         )
 
     def average_by_month(self) -> list[dict[str, Any]]:
-        """How prices moved overall, month by month."""
+        """How prices moved overall, month by month.
+
+        A price only appears in history on the day it changed, so averaging the rows of each
+        month averages whatever handful of articles happened to move that month. That chart
+        swings wildly and means nothing. What the client is asking is "how expensive is the
+        catalogue now compared to before", so each month takes the last known price of every
+        article as of that month, carried forward from whenever it was last set.
+        """
         return self.db.query(
             """
-            SELECT substr(taken_on, 1, 7) AS month,
-                   COUNT(DISTINCT product_id) AS products,
-                   CAST(AVG(price_cents) AS INTEGER) AS average_cents
-            FROM price_snapshot
+            WITH months AS (
+                SELECT DISTINCT substr(taken_on, 1, 7) AS month FROM price_snapshot
+            ),
+            vigente AS (
+                SELECT m.month,
+                       p.id AS product_id,
+                       (SELECT s.price_cents
+                          FROM price_snapshot s
+                         WHERE s.product_id = p.id
+                           AND s.price_cents IS NOT NULL
+                           AND substr(s.taken_on, 1, 7) <= m.month
+                         ORDER BY s.taken_on DESC
+                         LIMIT 1) AS price_cents
+                  FROM months m CROSS JOIN product p
+            )
+            SELECT month,
+                   COUNT(price_cents)                  AS products,
+                   CAST(AVG(price_cents) AS INTEGER)   AS average_cents
+            FROM vigente
             WHERE price_cents IS NOT NULL
             GROUP BY month
             ORDER BY month

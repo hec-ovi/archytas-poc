@@ -114,14 +114,28 @@ def _seed(store: Store) -> None:
         {"number": "F-2000", "supplier_id": aceros, "issued_on": days_from_today(-15),
          "due_on": days_from_today(15), "amount_cents": 10000000}
     )
+    # vence pronto pero ya tiene su recibo emitido
+    with_receipt = store.invoices.save(
+        {"number": "F-3000", "supplier_id": aceros, "issued_on": days_from_today(-10),
+         "due_on": days_from_today(5), "amount_cents": 30000000}
+    )
+    store.receipts.save(
+        {"number": store.receipts.number_for("F-3000"), "invoice_id": with_receipt,
+         "issued_on": days_from_today(-9), "issued_by": "portal"}
+    )
     store.payments.insert(
         {"reference": "TRF-1", "invoice_id": partial, "supplier_id": aceros,
          "paid_on": days_from_today(-5), "amount_cents": 4000000, "created_by": "portal"}
     )
-    for invoice_id in (open_invoice, expired, partial):
+    for invoice_id in (open_invoice, expired, partial, with_receipt):
         invoice = store.invoices.get(invoice_id)
         store.calendar.sync_from_invoice(invoice, invoice["supplier_id"])
 
+    store.orders.save(
+        {"external_id": "oc1", "number": "OC-1", "supplier_id": cuyo, "product_id": product,
+         "ordered_on": days_from_today(-60), "quantity": 5, "estimated_cents": 22500000,
+         "status": "pendiente"}
+    )
     store.sales.save(
         {"code": "V-1", "sold_on": days_from_today(-3), "product_id": product, "customer": "Obra Norte",
          "quantity": 2, "unit_cents": 4500000, "total_cents": 9000000, "row_hash": "h1"}

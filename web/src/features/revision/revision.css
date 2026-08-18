@@ -1,0 +1,73 @@
+.rev-tarjeta {
+  border: 1px solid var(--linea);
+  background: var(--panel);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+}
+
+.rev-cuerpo {
+  padding: var(--e3);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.rev-lado {
+  border-left: 1px solid var(--linea-suave);
+  background: var(--panel-alt);
+  padding: var(--e3);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rev-titulo {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.rev-detalle {
+  color: var(--tinta-media);
+}
+
+.rev-candidato {
+  border: 1px solid var(--linea);
+  background: var(--panel);
+  padding: 7px 9px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+
+.rev-candidato:hover:not(:disabled) {
+  border-color: var(--acento);
+  background: var(--acento-tenue);
+}
+
+.rev-candidato:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rev-candidato .valor {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.rev-candidato .confianza {
+  font-size: 11px;
+  color: var(--tinta-suave);
+}
+
+.rev-filas {
+  overflow-x: auto;
+}
+
+@media (max-width: 1000px) {
+  .rev-tarjeta { grid-template-columns: minmax(0, 1fr); }
+  .rev-lado { border-left: none; border-top: 1px solid var(--linea-suave); }
+}

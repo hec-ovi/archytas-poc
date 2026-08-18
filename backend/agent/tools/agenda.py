@@ -11,6 +11,7 @@ from ..values import as_date
 
 class ConsultarCalendario(Tool):
     name = "consultar_calendario"
+    section = "calendario"
     parameters = (
         Parameter("desde", "string", required=True),
         Parameter("hasta", "string", required=True),

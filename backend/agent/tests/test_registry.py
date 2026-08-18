@@ -4,7 +4,7 @@ from __future__ import annotations
 
 
 def test_toda_herramienta_se_describe_con_su_prompt(registry):
-    for schema in registry.schemas:
+    for schema in registry.schemas():
         function = schema["function"]
         assert function["description"].strip()
         for name, parameter in function["parameters"]["properties"].items():

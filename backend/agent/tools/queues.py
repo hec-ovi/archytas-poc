@@ -9,6 +9,7 @@ from .base import Parameter, Tool
 
 class ConsultarRevision(Tool):
     name = "consultar_revision"
+    section = "revision"
     parameters = (Parameter("tipo", "string"),)
 
     def run(self, tipo: str = "", **_: Any) -> dict[str, Any]:
@@ -28,6 +29,7 @@ class ConsultarRevision(Tool):
 
 class ConsultarMensajes(Tool):
     name = "consultar_mensajes"
+    section = "mensajes"
     parameters = (Parameter("solo_abiertos", "boolean"),)
 
     def run(self, solo_abiertos: object = True, **_: Any) -> dict[str, Any]:

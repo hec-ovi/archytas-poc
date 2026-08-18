@@ -19,6 +19,7 @@ from .presenters import money, supplier_view
 
 class ConsultarProveedor(Tool):
     name = "consultar_proveedor"
+    section = "proveedores"
     parameters = (Parameter("proveedor", "string", required=True),)
 
     def __init__(self, store: Store, prompts: PromptLibrary, suppliers: SupplierLookup):
@@ -35,6 +36,7 @@ class ConsultarProveedor(Tool):
 
 class ConsultarDeudas(Tool):
     name = "consultar_deudas"
+    section = "proveedores"
 
     def run(self, **_: Any) -> dict[str, Any]:
         positions = [supplier_view(row) for row in self._store.suppliers.positions()]

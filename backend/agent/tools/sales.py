@@ -10,6 +10,7 @@ from .presenters import money
 
 class ConsultarVentas(Tool):
     name = "consultar_ventas"
+    section = "ventas"
     parameters = (Parameter("anio", "integer"),)
 
     def run(self, anio: object = None, **_: Any) -> dict[str, Any]:

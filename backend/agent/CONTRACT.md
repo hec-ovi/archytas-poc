@@ -18,7 +18,7 @@ y cada proveedor lo resuelve el catalogo de `ingest`. Si una herramienta no lo d
 ```python
 from agent import Agent
 
-respuesta = Agent(store).ask("cuanto le debemos a Herramientas Cuyo?", user="marcela")
+respuesta = Agent(store).ask("cuanto le debemos a Herramientas Cuyo?", user="marcela", rol="compras")
 respuesta.text                  # "Le debemos $4.097.341,00 a Herramientas Cuyo SRL."
 respuesta.as_dict()["pasos"]    # que herramienta corrio, con que argumentos y que devolvio
 ```
@@ -29,14 +29,15 @@ respuesta.as_dict()["pasos"]    # que herramienta corrio, con que argumentos y q
 | `settings` | `AgentSettings` | donde vive el modelo. Sin esto, sale del entorno |
 | `question` | str | lo que escribio la persona |
 | `user` | str | quien pregunta. Sin esto ninguna herramienta que escribe corre |
+| `rol` | str | `duenio`, `compras` o `ventas`. Decide que herramientas existen. Por defecto `duenio` |
 
 ## Que ofrece
 
 ### `Agent(store, settings=None)`
 | Metodo | Que hace |
 |---|---|
-| `ask(question, user="") -> Answer` | contesta, corriendo las herramientas que hagan falta |
-| `tools -> tuple[str, ...]` | los nombres de las herramientas disponibles |
+| `ask(question, user="", rol="duenio") -> Answer` | contesta, corriendo las herramientas que hagan falta |
+| `tools(rol="duenio") -> tuple[str, ...]` | los nombres de las herramientas de ese rol |
 | `close()` | cierra el cliente HTTP |
 
 ### `Answer`
@@ -54,9 +55,10 @@ respuesta.as_dict()["pasos"]    # que herramienta corrio, con que argumentos y q
 error), `as_dict()`.
 
 ### `ToolRegistry(store)` y `ChatClient(settings)`
-El registro arma las herramientas, expone sus esquemas JSON (`schemas`) y despacha una por
-nombre (`dispatch(name, arguments, user)`). El cliente habla con cualquier endpoint
-compatible con OpenAI y maneja la vuelta de herramientas.
+El registro arma las herramientas, expone los esquemas JSON que ese rol puede usar
+(`schemas(rol)`), sus nombres (`names_for(rol)`) y despacha una por nombre
+(`dispatch(name, arguments, user, rol)`). El cliente habla con cualquier endpoint compatible
+con OpenAI y maneja la vuelta de herramientas.
 
 ## Las herramientas
 
@@ -76,11 +78,14 @@ formato que vengan.
 |---|---|---|
 | `consultar_proveedor` | `proveedor` | posicion de cuenta: facturas, comprado, pagado, deuda y atraso mas viejo |
 | `consultar_deudas` | - | la posicion de todos los proveedores y la deuda total |
-| `consultar_facturas` | `estado`, `proveedor` | facturas con saldo y estado, saldo total y resumen por estado |
+| `consultar_cumplimiento_plazos` | - | por proveedor: el plazo pactado, cuantas facturas caen dentro y cuantas fuera |
+| `consultar_facturas` | `estado`, `proveedor`, `solo_vencidas` | facturas con saldo y estado, saldo total y resumen por estado |
 | `consultar_factura` | `factura`, `proveedor` | la factura, sus pagos y su recibo |
+| `consultar_recibos_faltantes` | `dias_adelante` | las facturas sin recibo cuyo vencimiento todavia no paso, con cuantos dias quedan para emitirlo, y cuantas ya lo perdieron |
 | `consultar_ventas` | `anio` | facturado por mes, total y cuantas ventas quedaron excluidas |
 | `consultar_productos` | `buscar`, `stock_maximo` | productos con rubro, stock y precio, del stock mas bajo al mas alto |
 | `consultar_calendario` | `desde`, `hasta` | vencimientos del periodo con monto, saldo, estado y recibo |
+| `consultar_ordenes_olvidadas` | `dias` | ordenes abiertas hace demasiado, con cuantos dias llevan esperando |
 | `consultar_revision` | `tipo` | pendientes con su id, sus candidatos y el resumen por tipo |
 | `consultar_mensajes` | `solo_abiertos` | la bandeja, con el id de cada mensaje |
 
@@ -96,6 +101,31 @@ Todas guardan quien lo pidio.
 | `resolver_revision` | `pendiente_id`, `proveedor_slug`, `nota` | que se aplico y cuantos pendientes quedan | un proveedor que no esta en el catalogo, o un pendiente ya cerrado |
 | `resolver_mensaje` | `mensaje_id`, `nota` | el mensaje cerrado y cuantos quedan abiertos | un mensaje que no existe |
 
+## Que ve cada rol
+
+Las herramientas se agrupan por seccion, las mismas secciones con las que se escriben los
+roles en `store`. Un rol no ve las herramientas de una seccion que no le corresponde: no
+aparecen en su lista, y si igual se las llama, se rechazan con el motivo.
+
+| Seccion | Herramientas |
+|---|---|
+| `proveedores` | `consultar_proveedor`, `consultar_deudas`, `consultar_cumplimiento_plazos` |
+| `facturas` | `cargar_documento`, `consultar_facturas`, `consultar_factura`, `consultar_recibos_faltantes`, `registrar_pago`, `emitir_recibo`, `ajustar_monto` |
+| `calendario` | `consultar_calendario` |
+| `ordenes` | `consultar_ordenes_olvidadas` |
+| `revision` | `consultar_revision`, `resolver_revision` |
+| `mensajes` | `consultar_mensajes`, `resolver_mensaje` |
+| `ventas` | `consultar_ventas` |
+| `productos` | `consultar_productos` |
+
+| Rol | Herramientas |
+|---|---|
+| `duenio` | las 18 |
+| `compras` | 16: todas menos `consultar_ventas` y `consultar_productos` |
+| `ventas` | 2: `consultar_ventas` y `consultar_productos` |
+
+Un rol que no existe no recibe ninguna herramienta.
+
 ## Lo que el agente no puede hacer
 
 - **Crear un proveedor.** Un nombre que no resuelve contra el catalogo no se carga: el
@@ -106,6 +136,8 @@ Todas guardan quien lo pidio.
 - **Escribir sin nombre.** Sin `user`, toda herramienta que cambia algo se niega.
 - **Hacerse pasar por otro.** Quien pide el cambio lo inyecta el registro, no el modelo:
   un `usuario` escrito en los argumentos se descarta.
+- **Salirse de su rol.** Julian no puede registrar un pago pidiendolo con palabras: esa
+  herramienta no existe para el.
 - **Borrar.** No hay ninguna herramienta que borre.
 
 ## Errores
@@ -127,7 +159,10 @@ tambien, asi una conversacion nunca se muere a la mitad.
   como markdown.
 - La vuelta de herramientas siempre termina: cuando llega al limite de vueltas, la respuesta
   lo dice y viene con el rastro de todo lo que consulto.
-- Toda respuesta viaja con el rastro de las herramientas que corrieron.
+- Toda respuesta viaja con el rastro de las herramientas que corrieron, incluidas las que se
+  rechazaron por el rol.
+- Una pregunta que termina en un subconjunto la filtra una consulta, no el modelo leyendo una
+  lista larga.
 - Los montos son centavos enteros y las fechas texto ISO.
 
 ## Entorno

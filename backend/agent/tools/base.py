@@ -32,6 +32,9 @@ class Tool:
     """The contract every tool answers to."""
 
     name: str = ""
+    # the section of the system this tool belongs to, the same names the roles are written
+    # with. A role that does not have the section never sees the tool
+    section: str = ""
     parameters: tuple[Parameter, ...] = ()
     # a tool that writes gets the name of whoever asked, injected by the registry and never
     # exposed to the model, so nobody can be impersonated from a chat message

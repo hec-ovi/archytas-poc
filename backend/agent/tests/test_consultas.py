@@ -23,7 +23,7 @@ def test_un_proveedor_que_no_existe_vuelve_como_error_con_los_del_catalogo(regis
 def test_las_deudas_suman_todos_los_proveedores(registry):
     result = registry.dispatch("consultar_deudas", {})
 
-    assert result["deuda_total_centavos"] == 76000000
+    assert result["deuda_total_centavos"] == 106000000
     assert [row["proveedor"] for row in result["proveedores"]][0] == "Herramientas Cuyo SRL"
 
 
@@ -37,7 +37,7 @@ def test_las_facturas_se_filtran_por_estado(registry):
 def test_las_facturas_se_filtran_por_proveedor(registry):
     result = registry.dispatch("consultar_facturas", {"proveedor": "Aceros Belgrano"})
 
-    assert [row["numero"] for row in result["facturas"]] == ["F-2000"]
+    assert [row["numero"] for row in result["facturas"]] == ["F-3000", "F-2000"]
 
 
 def test_una_factura_viene_con_sus_pagos_y_su_recibo(registry):
@@ -71,7 +71,7 @@ def test_el_calendario_devuelve_los_vencimientos_del_periodo(registry):
         "consultar_calendario", {"desde": days_from_today(0), "hasta": days_from_today(12)}
     )
 
-    assert [row["factura"] for row in result["vencimientos"]] == ["F-7797"]
+    assert [row["factura"] for row in result["vencimientos"]] == ["F-3000", "F-7797"]
 
 
 def test_una_fecha_ilegible_no_se_adivina(registry):
@@ -92,3 +92,42 @@ def test_la_bandeja_trae_los_mensajes_abiertos(registry):
 
     assert result["abiertos"] == 1
     assert result["mensajes"][0]["asunto"] == "Reclamo de pago"
+
+
+def test_los_recibos_faltantes_son_los_que_todavia_se_pueden_emitir(registry):
+    result = registry.dispatch("consultar_recibos_faltantes", {"dias_adelante": 30})
+
+    # F-7797 vence en diez dias y F-2000 en quince, ninguna tiene recibo
+    assert [row["numero"] for row in result["facturas"]] == ["F-7797", "F-2000"]
+    assert result["facturas"][0]["dias_para_vencer"] == 10
+    # F-3000 vence en cinco dias pero ya tiene recibo, y F-1000 vencio hace un mes sin emitirlo
+    assert result["ya_vencidas_sin_recibo"] == 1
+
+
+def test_una_factura_que_vence_despues_de_la_ventana_queda_afuera(registry):
+    result = registry.dispatch("consultar_recibos_faltantes", {"dias_adelante": 3})
+
+    assert result["cantidad"] == 0
+    assert result["hasta"] == days_from_today(3)
+
+
+def test_las_facturas_vencidas_se_filtran_en_la_consulta(registry):
+    result = registry.dispatch("consultar_facturas", {"solo_vencidas": True})
+
+    assert [row["numero"] for row in result["facturas"]] == ["F-1000"]
+
+
+def test_las_ordenes_olvidadas_traen_cuanto_llevan_esperando(registry):
+    result = registry.dispatch("consultar_ordenes_olvidadas", {})
+
+    assert result["ordenes"][0]["numero"] == "OC-1"
+    assert result["ordenes"][0]["dias_esperando"] == 60
+    assert result["dias_para_olvidada"] == 30
+
+
+def test_el_cumplimiento_de_plazos_compara_contra_lo_pactado(registry):
+    result = registry.dispatch("consultar_cumplimiento_plazos", {})
+
+    cuyo = next(row for row in result["proveedores"] if row["proveedor"] == "Herramientas Cuyo SRL")
+    assert cuyo["plazo_pactado_dias"] == 30
+    assert cuyo["facturas_en_plazo"] == 2

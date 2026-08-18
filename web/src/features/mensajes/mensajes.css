@@ -1,0 +1,31 @@
+.msj {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 190px;
+  gap: var(--e3);
+  padding: 10px 12px;
+  background: var(--panel);
+  align-items: start;
+}
+
+.msj.resuelto {
+  background: var(--panel-alt);
+  color: var(--tinta-media);
+}
+
+.msj-cuerpo {
+  white-space: pre-wrap;
+  color: var(--tinta-media);
+  margin-top: 3px;
+}
+
+.msj-acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+@media (max-width: 1000px) {
+  .msj { grid-template-columns: minmax(0, 1fr); }
+  .msj-acciones { align-items: flex-start; }
+}
