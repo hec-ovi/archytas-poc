@@ -45,7 +45,7 @@
 
 .panel.alerta .panel-cabecera {
   background: var(--rojo-fondo);
-  border-bottom-color: #e4c6c6;
+  border-bottom-color: #e8c6c2;
 }
 
 /* ------------------------------------------------------------------ metricas */
@@ -76,13 +76,13 @@
   border-left: 3px solid var(--rojo);
 }
 
-.metrica.urgente .valor { color: var(--rojo); }
+.metrica.urgente .valor { color: var(--rojo-texto); }
 
 .metrica.aviso {
   border-left: 3px solid var(--ambar);
 }
 
-.metrica.aviso .valor { color: var(--ambar); }
+.metrica.aviso .valor { color: var(--ambar-texto); }
 
 .metrica.calma {
   border-left: 3px solid var(--acento);
@@ -169,9 +169,9 @@ table.tabla tfoot td {
   white-space: nowrap;
 }
 
-.chapa.impaga { background: var(--rojo-fondo); color: var(--rojo); border-color: #e2c4c4; }
-.chapa.parcial { background: var(--ambar-fondo); color: var(--ambar); border-color: #e5d4ab; }
-.chapa.saldada { background: var(--verde-fondo); color: var(--verde); border-color: #c6ddca; }
+.chapa.impaga { background: var(--rojo-fondo); color: var(--rojo-texto); border-color: #e8c6c2; }
+.chapa.parcial { background: var(--ambar-fondo); color: var(--ambar-texto); border-color: #e4d3a6; }
+.chapa.saldada { background: var(--verde-fondo); color: var(--verde-texto); border-color: #c3dccb; }
 .chapa.neutra { background: #eeeeea; color: var(--tinta-media); border-color: var(--linea); }
 .chapa.acento { background: var(--acento-tenue); color: var(--acento-oscuro); border-color: #b9d6da; }
 .chapa.violeta { background: var(--violeta-fondo); color: var(--violeta); border-color: #d2cbe8; }
@@ -230,8 +230,8 @@ table.tabla tfoot td {
 }
 
 .boton.peligro {
-  border-color: #d3b0b0;
-  color: var(--rojo);
+  border-color: #d9b2ad;
+  color: var(--rojo-texto);
 }
 
 .boton.peligro:hover:not(:disabled) {
@@ -328,15 +328,15 @@ table.tabla tfoot td {
 }
 
 .aviso.error {
-  border-color: #d9b4b4;
+  border-color: #dfb8b3;
   background: var(--rojo-fondo);
-  color: var(--rojo);
+  color: var(--rojo-texto);
 }
 
 .aviso.exito {
-  border-color: #c6ddca;
+  border-color: #c3dccb;
   background: var(--verde-fondo);
-  color: var(--verde);
+  color: var(--verde-texto);
 }
 
 .vacio {

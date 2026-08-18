@@ -71,9 +71,9 @@ textarea {
   font-weight: 600;
 }
 
-.rojo { color: var(--rojo); }
-.ambar { color: var(--ambar); }
-.verde { color: var(--verde); }
+.rojo { color: var(--rojo-texto); }
+.ambar { color: var(--ambar-texto); }
+.verde { color: var(--verde-texto); }
 
 .titulo-pagina {
   font-size: 19px;

@@ -19,12 +19,16 @@
   --barra-tinta-fuerte: #f2f3f1;
   --barra-linea: #2c2f2d;
 
-  --rojo: #a32d2d;
-  --rojo-fondo: #f9e9e9;
-  --ambar: #8a5a00;
-  --ambar-fondo: #f9f0dd;
-  --verde: #2c6b3f;
-  --verde-fondo: #e8f1e9;
+  /* state colours, checked for colour-blind separation; text variants are the darker step */
+  --rojo: #b3261e;
+  --rojo-texto: #8f1e18;
+  --rojo-fondo: #fbeae8;
+  --ambar: #b07f00;
+  --ambar-texto: #7a5800;
+  --ambar-fondo: #f9f0dc;
+  --verde: #1e6b3a;
+  --verde-texto: #18572f;
+  --verde-fondo: #e7f1ea;
   --violeta: #5a4b8a;
   --violeta-fondo: #eeebf6;
 
