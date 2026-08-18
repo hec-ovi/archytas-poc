@@ -7,6 +7,7 @@ to the local tray inside the temp folder.
 
 from __future__ import annotations
 
+import json
 import sys
 from datetime import date, timedelta
 from pathlib import Path
@@ -18,7 +19,7 @@ BACKEND = Path(__file__).resolve().parents[2]
 if str(BACKEND) not in sys.path:
     sys.path.insert(0, str(BACKEND))
 
-from notify import Notifier  # noqa: E402
+from notify import Channel, Delivery, Notifier  # noqa: E402
 from store import Store  # noqa: E402
 
 TODAY = "2026-08-18"
@@ -27,6 +28,31 @@ TODAY = "2026-08-18"
 def day(offset: int) -> str:
     """An ISO date `offset` days away from the fixed today the tests run on."""
     return (date.fromisoformat(TODAY) + timedelta(days=offset)).isoformat()
+
+
+def outbox_lines(tmp_path: Path) -> list[dict]:
+    """Every message the local tray actually wrote, one per delivery."""
+    path = tmp_path / "outbox.jsonl"
+    if not path.exists():
+        return []
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+
+
+class FlakyChannel(Channel):
+    """Refuses the first attempts and accepts the next one, like a token being renewed."""
+
+    name = "flaky"
+
+    def __init__(self, fails: int = 1):
+        super().__init__(("marcela",))
+        self.attempts = 0
+        self._fails = fails
+
+    def send(self, recipient, message) -> Delivery:
+        self.attempts += 1
+        if self.attempts <= self._fails:
+            return Delivery.failure(self.name, recipient, "el proveedor rechazo el envio")
+        return Delivery.sent(self.name, recipient, f"flaky-{self.attempts}")
 
 
 class Seed:

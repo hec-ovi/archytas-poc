@@ -2,34 +2,9 @@
 
 from __future__ import annotations
 
-import json
-
 from alerts import AlertEngine
-from conftest import TODAY, day
-from notify import Channel, Delivery, Notifier
-
-
-class FlakyChannel(Channel):
-    """Refuses the first attempt and accepts the next one, like an expired token being renewed."""
-
-    name = "flaky"
-
-    def __init__(self):
-        super().__init__(("marcela",))
-        self.attempts = 0
-
-    def send(self, recipient, message) -> Delivery:
-        self.attempts += 1
-        if self.attempts == 1:
-            return Delivery.failure(self.name, recipient, "el proveedor rechazo el envio")
-        return Delivery.sent(self.name, recipient, f"flaky-{self.attempts}")
-
-
-def outbox_lines(tmp_path) -> list[dict]:
-    path = tmp_path / "outbox.jsonl"
-    if not path.exists():
-        return []
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+from conftest import TODAY, FlakyChannel, day, outbox_lines
+from notify import Notifier
 
 
 def test_an_empty_database_interrupts_nobody(store, notifier):
