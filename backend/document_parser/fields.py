@@ -19,7 +19,7 @@ from .result import (
     Record,
     Unreadable,
 )
-from .values import ValueReader
+from .values import ValueReader, ambiguity
 from .vocabulary import FIELD_LABELS, TEXT_LABELS, TIER_WEIGHTS
 
 MIN_READABLE_CHARS = 20
@@ -93,9 +93,9 @@ class FieldExtractor:
 
             if not readings:
                 continue
-            if len({reading.value for _, _, reading in readings}) > 1:
-                shown = ", ".join(sorted(f"'{raw}'" for _, raw, _ in readings))
-                return Unreadable(name, f"hay mas de un valor posible para {FIELD_LABELS[name]}: {shown}")
+            clash = ambiguity(name, readings)
+            if clash:
+                return Unreadable(name, clash)
 
             line_number, raw, reading = readings[0]
             return ExtractedField(

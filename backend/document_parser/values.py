@@ -71,6 +71,18 @@ class ValueReader:
         return resolved(str(raw), text, "etiqueta")
 
 
+def ambiguity(field: str, readings: list[tuple]) -> str | None:
+    """The message for several readings that disagree, or `None` when they all agree.
+
+    Shared by the two ways a field is found (a label in text, a label cell in a sheet):
+    finding two answers is never resolved by taking the first one.
+    """
+    if len({reading.value for *_, reading in readings}) <= 1:
+        return None
+    shown = ", ".join(sorted(f"'{raw}'" for _, raw, _ in readings))
+    return f"hay mas de un valor posible para {FIELD_LABELS[field]}: {shown}"
+
+
 def _short(raw: object) -> str:
     text = " ".join(str(raw).split())
     return text if len(text) <= 40 else text[:37] + "..."

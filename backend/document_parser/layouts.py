@@ -11,7 +11,7 @@ from openpyxl.utils import get_column_letter
 
 from .headers import TOKEN, ColumnMap, HeaderMatcher
 from .result import INVOICE_FIELDS, ExtractedField, Record, Unreadable
-from .values import ValueReader
+from .values import ValueReader, ambiguity
 from .vocabulary import FIELD_LABELS, TIER_WEIGHTS
 
 
@@ -84,9 +84,9 @@ class PairsLayout:
                 reason = rejected.get(name) or f"no aparece {FIELD_LABELS[name]} en la planilla"
                 unreadable.append(Unreadable(name, reason))
                 continue
-            if len({reading.value for _, _, reading in readings}) > 1:
-                shown = ", ".join(sorted(f"'{raw}'" for _, raw, _ in readings))
-                unreadable.append(Unreadable(name, f"hay mas de un valor posible para {FIELD_LABELS[name]}: {shown}"))
+            clash = ambiguity(name, readings)
+            if clash:
+                unreadable.append(Unreadable(name, clash))
                 continue
             where, raw, reading = readings[0]
             fields[name] = ExtractedField(
