@@ -38,12 +38,19 @@ docker compose up --build
 - Sistema: http://localhost:5173
 - API: http://localhost:8100 (documentacion en http://localhost:8100/docs)
 
-La base se crea sola en el primer arranque. Para llenarla con los datos del portal, entrar
-como `duenio` y tocar "Actualizar ahora" en Configuracion, o:
+La base se crea sola en el primer arranque, vacia. Para llenarla con los datos del portal,
+entrar como `duenio` y tocar "Actualizar ahora" en Configuracion, o desde la consola:
 
 ```bash
-curl -X POST http://localhost:8100/api/sync -b cookies.txt
+curl -s -c galletas.txt -X POST http://localhost:8100/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"usuario":"duenio","clave":"cordillera2026"}'
+
+curl -s -b galletas.txt -X POST http://localhost:8100/api/sync
 ```
+
+La pasada tarda unos 15 segundos. Agregando `?con_historial=true` trae ademas toda la
+historia de precios de cada articulo (unos 50 segundos, 100 pedidos mas al portal).
 
 ### Usuarios
 
