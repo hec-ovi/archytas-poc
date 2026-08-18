@@ -31,6 +31,18 @@ async function request<T>(metodo: Metodo, path: string, body?: unknown): Promise
   return (await response.json()) as T
 }
 
+/** Binary answers (the original invoice file) come back as a blob, not json. */
+async function pedirArchivo(path: string): Promise<Blob> {
+  let response: Response
+  try {
+    response = await fetch(`${API_BASE}${path}`, { credentials: 'include' })
+  } catch {
+    throw new ApiError(0, 'No se puede conectar con el servidor. Revisa que este encendido.')
+  }
+  if (!response.ok) throw new ApiError(response.status, await detalle(response))
+  return response.blob()
+}
+
 async function detalle(response: Response): Promise<string> {
   try {
     const data = await response.json()
@@ -72,6 +84,7 @@ export const api = {
     listar: (filtros: { estado?: string; proveedor?: number } = {}) =>
       request<FacturasRespuesta>('GET', `/api/facturas${query(filtros)}`),
     detalle: (id: number) => request<FacturaDetalle>('GET', `/api/facturas/${id}`),
+    archivo: (id: number) => pedirArchivo(`/api/facturas/${id}/archivo`),
     pagar: (id: number, datos: { monto_centavos: number; fecha?: string; referencia?: string }) =>
       request<{ factura: Factura }>('POST', `/api/facturas/${id}/pagos`, datos),
     emitirRecibo: (id: number) =>

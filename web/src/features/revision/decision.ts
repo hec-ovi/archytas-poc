@@ -17,7 +17,7 @@ export function textoCandidato(candidato: CandidatoRevision): string {
 }
 
 /** The raw row of a duplicate carries no hash, so it is matched against the stored sale. */
-export function huellaDeFila(
+function huellaDeFila(
   fila: Record<string, string> | undefined,
   excluidas: VentaExcluida[] | null,
 ): string | null {
@@ -33,8 +33,10 @@ function firma(fila: Record<string, string>): string {
 
 export interface Eleccion {
   decision: Record<string, unknown>
-  /** False when the choice cannot be applied yet and would only be recorded. */
+  /** False when the choice cannot be sent at all from this session. */
   aplica: boolean
+  /** What actually happens when the person clicks, when it is not the obvious thing. */
+  nota?: string
 }
 
 export function armarDecision(
@@ -44,7 +46,13 @@ export function armarDecision(
 ): Eleccion {
   if (pendiente.kind === 'venta-duplicada') {
     const huella = huellaDeFila(candidato.fila, excluidas)
-    if (!huella) return { decision: { fila: candidato.fila, elegido: candidato.valor }, aplica: false }
+    if (!huella) {
+      return {
+        decision: { fila: candidato.fila, elegido: candidato.valor },
+        aplica: false,
+        nota: 'Para aplicar esta elección hace falta acceso a la sección Ventas.',
+      }
+    }
     return { decision: { codigo_valido: true, row_hash: huella, elegido: candidato.valor }, aplica: true }
   }
 
@@ -56,5 +64,9 @@ export function armarDecision(
     return { decision: { rubro_slug: String(candidato.valor) }, aplica: true }
   }
 
-  return { decision: { valor_elegido: candidato.valor, nota: candidato.nota ?? '' }, aplica: true }
+  return {
+    decision: { valor_elegido: candidato.valor, nota: candidato.nota ?? '' },
+    aplica: true,
+    nota: 'El número no se corrige solo: queda registrado quién lo revisó y con qué valor.',
+  }
 }

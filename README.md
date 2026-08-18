@@ -31,8 +31,16 @@ que corre en la misma maquina en el puerto 8080).
 
 ```bash
 git clone <este-repo> && cd archytas-poc
-cp .env.example .env          # las credenciales del portal ya vienen puestas
+cp .env.example .env
 docker compose up --build
+```
+
+Antes de levantar, completar en `.env` el usuario y la clave del portal SIGProv (son los que
+figuran en el enunciado):
+
+```
+PORTAL_USER=...
+PORTAL_PASSWORD=...
 ```
 
 - Sistema: http://localhost:5173
@@ -78,7 +86,7 @@ Todo se ajusta desde `.env`. Lo que importa:
 
 | Variable | Para que |
 |---|---|
-| `PORTAL_BASE_URL`, `PORTAL_USER`, `PORTAL_PASSWORD` | el portal de donde salen los datos |
+| `PORTAL_BASE_URL`, `PORTAL_USER`, `PORTAL_PASSWORD` | el portal de donde salen los datos. Usuario y clave van vacios en el ejemplo a proposito: no viajan en el repo |
 | `LLM_BASE_URL`, `LLM_MODEL` | el modelo que usa el agente. Por defecto el llama.cpp local |
 | `NOTIFY_CHANNELS` | `whatsapp`, `telegram` o `bandeja`. Sin credenciales, todo cae en la bandeja local |
 | `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_ID`, `WHATSAPP_RECIPIENTS` | ver `backend/notify/CONTRACT.md` |

@@ -3,7 +3,7 @@ import { Boton } from '../../ui/Boton'
 import { Chapa } from '../../ui/Chapa'
 import { DatosCrudos } from './DatosCrudos'
 import type { CandidatoRevision, PendienteRevision, VentaExcluida } from '../../lib/types'
-import { armarDecision, huellaDeFila, textoCandidato } from './decision'
+import { armarDecision, textoCandidato } from './decision'
 
 const TIPO: Record<string, string> = {
   'venta-duplicada': 'Venta duplicada',
@@ -22,6 +22,11 @@ interface Props {
 
 export function TarjetaPendiente({ pendiente, excluidas, trabajando, onResolver, onDescartar }: Props) {
   const candidatos: CandidatoRevision[] = Array.isArray(pendiente.candidates) ? pendiente.candidates : []
+  const elecciones = candidatos.map((candidato) => ({
+    candidato,
+    eleccion: armarDecision(pendiente, candidato, excluidas),
+  }))
+  const aclaracion = elecciones.find(({ eleccion }) => eleccion.nota)?.eleccion.nota
   const filas = (pendiente.raw.filas as Record<string, string>[] | undefined) ?? []
 
   return (
@@ -73,16 +78,13 @@ export function TarjetaPendiente({ pendiente, excluidas, trabajando, onResolver,
             No hay una sugerencia con respaldo. El sistema prefiere no adivinar: resolvelo vos o descartalo.
           </div>
         ) : (
-          candidatos.map((candidato, indice) => {
-            const eleccion = armarDecision(pendiente, candidato, excluidas)
-            const sinHuella = pendiente.kind === 'venta-duplicada' && !huellaDeFila(candidato.fila, excluidas)
-            return (
+          <>
+            {elecciones.map(({ candidato, eleccion }, indice) => (
               <button
                 key={indice}
                 className="rev-candidato"
-                disabled={trabajando || sinHuella}
+                disabled={trabajando || !eleccion.aplica}
                 onClick={() => onResolver(eleccion.decision)}
-                title={sinHuella ? 'Para aplicar esta elección hace falta acceso a la sección Ventas' : undefined}
               >
                 <span className="valor">{textoCandidato(candidato)}</span>
                 <span className="confianza">
@@ -90,8 +92,9 @@ export function TarjetaPendiente({ pendiente, excluidas, trabajando, onResolver,
                   {candidato.nota ? ` · ${candidato.nota}` : ''}
                 </span>
               </button>
-            )
-          })
+            ))}
+            {aclaracion ? <div className="tenue" style={{ fontSize: 11 }}>{aclaracion}</div> : null}
+          </>
         )}
 
         <div className="fila" style={{ marginTop: 'auto', gap: 6 }}>

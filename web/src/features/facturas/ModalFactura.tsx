@@ -7,6 +7,7 @@ import { Modal } from '../../ui/Modal'
 import { Pestanias } from '../../ui/Pestanias'
 import { Vacio } from '../../ui/Estado'
 import { ResumenFactura } from './ResumenFactura'
+import { ArchivoOriginal } from './ArchivoOriginal'
 import { FormularioPago } from './FormularioPago'
 import { FormularioAjuste } from './FormularioAjuste'
 import { AccionRecibo } from './AccionRecibo'
@@ -40,6 +41,8 @@ export function ModalFactura({ id, onCerrar, onCambio }: Props) {
         {(datos) => (
           <div className="pila">
             <ResumenFactura factura={datos.factura} />
+
+            <ArchivoOriginal id={datos.factura.id} origen={datos.cruda.source_kind} />
 
             <Pestanias
               activa={solapa}

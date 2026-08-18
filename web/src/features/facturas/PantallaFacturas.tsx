@@ -11,7 +11,14 @@ import { FiltrosFacturas, type EstadoFiltros } from './FiltrosFacturas'
 import { TablaFacturas } from './TablaFacturas'
 import { ModalFactura } from './ModalFactura'
 
-const VACIO: EstadoFiltros = { estado: '', proveedor: '', soloSinRecibo: false, busqueda: '' }
+const VACIO: EstadoFiltros = { estado: '', proveedor: '', origen: '', soloSinRecibo: false, busqueda: '' }
+
+const ORIGEN_TEXTO: Record<string, string> = {
+  pdf: 'PDF',
+  'pdf-escaneado': 'PDF escaneado',
+  excel: 'Excel',
+  portal: 'Portal',
+}
 
 export function PantallaFacturas() {
   const [filtros, setFiltros] = useState<EstadoFiltros>(VACIO)
@@ -33,10 +40,22 @@ export function PantallaFacturas() {
     const texto = filtros.busqueda.trim().toLowerCase()
     return (listado.datos?.facturas ?? []).filter((factura) => {
       if (filtros.soloSinRecibo && factura.has_receipt) return false
+      if (filtros.origen && factura.source_kind !== filtros.origen) return false
       if (!texto) return true
       return `${factura.number} ${factura.supplier_name ?? ''}`.toLowerCase().includes(texto)
     })
-  }, [listado.datos, filtros.busqueda, filtros.soloSinRecibo])
+  }, [listado.datos, filtros.busqueda, filtros.soloSinRecibo, filtros.origen])
+
+  const origenes = useMemo(() => {
+    const cuenta = new Map<string, number>()
+    for (const factura of listado.datos?.facturas ?? []) {
+      const clave = factura.source_kind ?? 'portal'
+      cuenta.set(clave, (cuenta.get(clave) ?? 0) + 1)
+    }
+    return [...cuenta.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([clave, n]) => ({ clave, texto: ORIGEN_TEXTO[clave] ?? clave, n }))
+  }, [listado.datos])
 
   const totales = useMemo(() => ({
     monto: filtradas.reduce((suma, f) => suma + f.amount_cents, 0),
@@ -85,6 +104,7 @@ export function PantallaFacturas() {
               onCambiar={setFiltros}
               proveedores={proveedores.datos?.proveedores ?? []}
               resumen={listado.datos?.resumen ?? null}
+              origenes={origenes}
             />
           </div>
           <Bloque recurso={listado} que="Cargando las facturas">

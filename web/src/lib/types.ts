@@ -13,6 +13,9 @@ export interface Sesion {
 
 export type EstadoPago = 'impaga' | 'parcial' | 'saldada'
 
+/** How the invoice arrived: the format of the file the supplier actually sent. */
+export type OrigenFactura = 'pdf' | 'pdf-escaneado' | 'excel' | 'portal'
+
 export interface Factura {
   id: number
   number: string
@@ -29,7 +32,7 @@ export interface Factura {
   supplier_slug?: string | null
   supplier_email?: string | null
   terms_days?: number | null
-  source_kind?: string
+  source_kind?: OrigenFactura | string
   status?: string
   product_id?: number | null
 }
@@ -70,7 +73,7 @@ export interface FacturaCruda {
   id: number
   external_id: string | null
   number: string
-  source_kind: string
+  source_kind: OrigenFactura | string
   source_file: string | null
   status: string
   created_at: string

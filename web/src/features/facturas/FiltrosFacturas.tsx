@@ -4,6 +4,7 @@ import type { PosicionProveedor, ResumenPagos } from '../../lib/types'
 export interface EstadoFiltros {
   estado: string
   proveedor: string
+  origen: string
   soloSinRecibo: boolean
   busqueda: string
 }
@@ -13,9 +14,11 @@ interface Props {
   onCambiar: (filtros: EstadoFiltros) => void
   proveedores: PosicionProveedor[]
   resumen: ResumenPagos | null
+  /** How many invoices arrived in each format, to show the three shapes the system handles. */
+  origenes: { clave: string; texto: string; n: number }[]
 }
 
-export function FiltrosFacturas({ filtros, onCambiar, proveedores, resumen }: Props) {
+export function FiltrosFacturas({ filtros, onCambiar, proveedores, resumen, origenes }: Props) {
   const set = (parche: Partial<EstadoFiltros>) => onCambiar({ ...filtros, ...parche })
 
   return (
@@ -36,6 +39,15 @@ export function FiltrosFacturas({ filtros, onCambiar, proveedores, resumen }: Pr
             <option key={proveedor.supplier_id} value={String(proveedor.supplier_id)}>
               {proveedor.name}
             </option>
+          ))}
+        </select>
+      </Campo>
+
+      <Campo etiqueta="Llegó como">
+        <select value={filtros.origen} onChange={(evento) => set({ origen: evento.target.value })}>
+          <option value="">Cualquier formato</option>
+          {origenes.map((origen) => (
+            <option key={origen.clave} value={origen.clave}>{origen.texto} ({origen.n})</option>
           ))}
         </select>
       </Campo>

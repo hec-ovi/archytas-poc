@@ -23,3 +23,21 @@ export function MarcaSinRecibo({ tieneRecibo }: { tieneRecibo: number | boolean 
   if (tieneRecibo) return null
   return <span className="sin-recibo">sin recibo</span>
 }
+
+const ORIGEN: Record<string, { texto: string; ayuda: string }> = {
+  pdf: { texto: 'PDF', ayuda: 'Llegó como PDF con texto: se lee derecho.' },
+  'pdf-escaneado': { texto: 'PDF escaneado', ayuda: 'Llegó escaneado: es una foto del papel, se leyó con OCR.' },
+  excel: { texto: 'Excel', ayuda: 'Llegó como planilla de Excel.' },
+  portal: { texto: 'Portal', ayuda: 'Se leyó directo del portal, sin archivo adjunto.' },
+}
+
+/** What format the supplier actually sent, so nobody opens a scan expecting a spreadsheet. */
+export function ChapaOrigen({ origen }: { origen: string | null | undefined }) {
+  if (!origen) return null
+  const dato = ORIGEN[origen]
+  return (
+    <span className="chapa neutra" title={dato?.ayuda}>
+      {dato?.texto ?? origen}
+    </span>
+  )
+}
