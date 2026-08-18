@@ -12,7 +12,7 @@ import { ModalFactura } from '../facturas/ModalFactura'
 import { GrillaMes } from './GrillaMes'
 import { PanelDia } from './PanelDia'
 import { FormularioEvento } from './FormularioEvento'
-import { armarGrilla, correrMes, hoyISO, mesDeHoy, type Mes } from './mes'
+import { armarGrilla, correrMes, hoyISO, mesDeHoy, primerDia, type Mes } from './mes'
 import type { EventoCalendario } from '../../lib/types'
 import './calendario.css'
 
@@ -24,6 +24,15 @@ export function PantallaCalendario() {
   const [factura, setFactura] = useState<number | null>(null)
   const [agregando, setAgregando] = useState(false)
   const [problema, setProblema] = useState<string | null>(null)
+
+  /** Changing month moves the day panel with it, so it never shows a day off the grid. */
+  const irAlMes = (siguiente: Mes) => {
+    const hoy = mesDeHoy()
+    setMes(siguiente)
+    setDiaElegido(
+      siguiente.anio === hoy.anio && siguiente.mes === hoy.mes ? hoyISO() : primerDia(siguiente),
+    )
+  }
 
   const rango = useMemo(() => {
     const casillas = armarGrilla(mes)
@@ -98,9 +107,9 @@ export function PantallaCalendario() {
       subtitulo="Arrastrá un vencimiento a otro día para moverlo. Lo que cambie otra persona aparece acá solo."
       acciones={
         <>
-          <Boton onClick={() => setMes(correrMes(mes, -1))}>‹ Mes anterior</Boton>
-          <Boton onClick={() => { setMes(mesDeHoy()); setDiaElegido(hoyISO()) }}>Hoy</Boton>
-          <Boton onClick={() => setMes(correrMes(mes, 1))}>Mes siguiente ›</Boton>
+          <Boton onClick={() => irAlMes(correrMes(mes, -1))}>‹ Mes anterior</Boton>
+          <Boton onClick={() => irAlMes(mesDeHoy())}>Hoy</Boton>
+          <Boton onClick={() => irAlMes(correrMes(mes, 1))}>Mes siguiente ›</Boton>
           <Boton variante="principal" onClick={() => setAgregando(true)}>Agregar vencimiento</Boton>
         </>
       }

@@ -30,10 +30,6 @@ export function primerDia({ anio, mes }: Mes): string {
   return iso(anio, mes, 1)
 }
 
-export function ultimoDia({ anio, mes }: Mes): string {
-  return iso(anio, mes, new Date(Date.UTC(anio, mes, 0)).getUTCDate())
-}
-
 export interface Casilla {
   fecha: string
   dia: number

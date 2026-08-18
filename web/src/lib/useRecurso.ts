@@ -19,8 +19,7 @@ export function useRecurso<T>(traer: () => Promise<T>, dependencias: unknown[] =
   const [error, setError] = useState<string | null>(null)
   const vivo = useRef(true)
 
-  // the caller writes the fetcher inline, so it is keyed by its declared dependencies
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // the caller writes the fetcher inline, so it is keyed by the dependencies it declares
   const pedir = useCallback(traer, dependencias)
 
   const correr = useCallback(() => {

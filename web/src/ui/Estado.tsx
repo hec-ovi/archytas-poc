@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react'
 import { Boton } from './Boton'
 
-export function Cargando({ que = 'Cargando' }: { que?: string }) {
+function Cargando({ que = 'Cargando' }: { que?: string }) {
   return <div className="cargando">{que}</div>
 }
 
-export function AvisoError({ mensaje, reintentar }: { mensaje: string; reintentar?: () => void }) {
+function AvisoError({ mensaje, reintentar }: { mensaje: string; reintentar?: () => void }) {
   return (
     <div className="aviso error" role="alert">
       <div>{mensaje}</div>

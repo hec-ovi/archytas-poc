@@ -21,7 +21,7 @@ async function request<T>(metodo: Metodo, path: string, body?: unknown): Promise
       body: body === undefined ? undefined : JSON.stringify(body),
     })
   } catch {
-    throw new ApiError(0, 'No se puede conectar con el servidor. Revisa que este encendido.')
+    throw new ApiError(0, 'No se puede conectar con el servidor. Revisá que esté encendido.')
   }
 
   if (!response.ok) {
@@ -37,7 +37,7 @@ async function pedirArchivo(path: string): Promise<Blob> {
   try {
     response = await fetch(`${API_BASE}${path}`, { credentials: 'include' })
   } catch {
-    throw new ApiError(0, 'No se puede conectar con el servidor. Revisa que este encendido.')
+    throw new ApiError(0, 'No se puede conectar con el servidor. Revisá que esté encendido.')
   }
   if (!response.ok) throw new ApiError(response.status, await detalle(response))
   return response.blob()
@@ -51,7 +51,7 @@ async function detalle(response: Response): Promise<string> {
   } catch {
     /* the body was not json */
   }
-  if (response.status === 401) return 'La sesion venció. Volvé a entrar.'
+  if (response.status === 401) return 'La sesión venció. Volvé a entrar.'
   if (response.status === 403) return 'Tu usuario no tiene acceso a esta seccion.'
   return `Error ${response.status} del servidor`
 }

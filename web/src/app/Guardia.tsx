@@ -2,14 +2,16 @@ import { Navigate, useLocation } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { useSesion } from './sesion'
 import { Pagina } from './Pagina'
+import { SinServidor } from './SinServidor'
 import type { Seccion } from '../lib/types'
 
 /** No session, no app. A role without the section never even sees its link. */
 export function Guardia({ seccion, children }: { seccion?: Seccion; children: ReactNode }) {
-  const { sesion, verificando, puede } = useSesion()
+  const { sesion, verificando, sinServidor, puede } = useSesion()
   const lugar = useLocation()
 
   if (verificando) return <div className="cargando" style={{ paddingTop: 80 }}>Verificando la sesión</div>
+  if (!sesion && sinServidor) return <SinServidor mensaje={sinServidor} />
   if (!sesion) return <Navigate to="/entrar" replace state={{ desde: lugar.pathname }} />
   if (seccion && !puede(seccion)) {
     return (

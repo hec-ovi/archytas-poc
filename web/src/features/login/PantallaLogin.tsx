@@ -9,7 +9,7 @@ import { USUARIOS } from './usuarios'
 import './login.css'
 
 export function PantallaLogin() {
-  const { sesion, verificando, entrar } = useSesion()
+  const { sesion, verificando, sinServidor, entrar } = useSesion()
   const navegar = useNavigate()
   const lugar = useLocation() as { state?: { desde?: string } }
   const [usuario, setUsuario] = useState('duenio')
@@ -81,7 +81,7 @@ export function PantallaLogin() {
           />
         </Campo>
 
-        {error ? <div className="aviso error" role="alert">{error}</div> : null}
+        {error ?? sinServidor ? <div className="aviso error" role="alert">{error ?? sinServidor}</div> : null}
 
         <Boton type="submit" variante="principal" disabled={entrando || !clave}>
           {entrando ? 'Entrando…' : `Entrar como ${USUARIOS.find((u) => u.usuario === usuario)?.nombre}`}

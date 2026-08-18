@@ -11,12 +11,6 @@ export function pesos(centavos: number | null | undefined): string {
   return `$${money.format(Math.round(centavos / 100))}`
 }
 
-/** Integer cents to `1.399.069`, for chart axes and tooltips where the sign is implied. */
-export function pesosSinSigno(centavos: number | null | undefined): string {
-  if (centavos === null || centavos === undefined) return '-'
-  return money.format(Math.round(centavos / 100))
-}
-
 /** Short form for chart axes: `$1,4 M`, `$820 k`. */
 export function pesosCorto(centavos: number | null | undefined): string {
   if (centavos === null || centavos === undefined) return '-'
@@ -64,11 +58,6 @@ export function mesLargo(month: string): string {
 
 export function nombreMes(indice: number): string {
   return MESES[indice] ?? ''
-}
-
-export function porcentaje(parte: number, total: number): string {
-  if (!total) return '-'
-  return `${Math.round((parte / total) * 100)}%`
 }
 
 /** Days overdue as plain words: positive means already late. */
