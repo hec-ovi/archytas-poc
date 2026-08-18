@@ -40,7 +40,7 @@ export function FilaParametro({ parametro, onGuardar }: Props) {
       <div className="fila" style={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
         <div style={{ minWidth: 0 }}>
           <div className="fuerte">{presentacion?.titulo ?? parametro.label}</div>
-          <div className="tenue" style={{ fontSize: 11.5 }}>{presentacion?.ayuda ?? parametro.label}</div>
+          {presentacion ? <div className="tenue" style={{ fontSize: 11.5 }}>{presentacion.ayuda}</div> : null}
           <div className="tenue" style={{ fontSize: 11 }}>
             Último cambio: {fechaHora(parametro.updated_at)} por {parametro.updated_by}
           </div>
@@ -55,7 +55,7 @@ export function FilaParametro({ parametro, onGuardar }: Props) {
             onChange={(evento) => setTexto(evento.target.value)}
             style={{ width: 110 }}
           />
-          <span className="tenue" style={{ minWidth: 44 }}>{presentacion?.unidad ?? ''}</span>
+          <span className="tenue" style={{ minWidth: 44 }}>{presentacion?.unidad ?? 'valor'}</span>
           <Boton
             chico
             variante={cambiado ? 'principal' : 'normal'}

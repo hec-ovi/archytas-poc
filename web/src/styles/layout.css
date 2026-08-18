@@ -158,6 +158,7 @@
 .grilla {
   display: grid;
   gap: var(--e3);
+  align-items: start;
 }
 
 .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -165,10 +166,11 @@
 .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .g-2-1 { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
 .g-1-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+.g-cal { grid-template-columns: minmax(0, 1fr) 330px; }
 
 @media (max-width: 1180px) {
   .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .g3, .g-2-1, .g-1-2 { grid-template-columns: minmax(0, 1fr); }
+  .g3, .g-2-1, .g-1-2, .g-cal { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 900px) {

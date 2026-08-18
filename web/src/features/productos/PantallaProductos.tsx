@@ -64,14 +64,13 @@ export function PantallaProductos() {
                   <TablaCaja alto={300}>
                     <table className="tabla">
                       <thead>
-                        <tr><th>Código</th><th>Descripción</th><th>Rubro</th><th className="num">Stock</th><th className="num">Precio</th></tr>
+                        <tr><th>Código</th><th>Descripción</th><th className="num">Stock</th><th className="num">Precio</th></tr>
                       </thead>
                       <tbody>
                         {stockBajo.map((fila) => (
                           <tr key={fila.id} className="clickeable" onClick={() => setElegido(fila.id)}>
                             <td className="mono">{fila.code}</td>
-                            <td>{fila.description}</td>
-                            <td className="tenue">{fila.category}</td>
+                            <td title={fila.category}>{fila.description}</td>
                             <td className={fila.stock === 0 ? 'num rojo fuerte' : 'num ambar fuerte'}>{numero(fila.stock)}</td>
                             <td className="num">{pesos(fila.price_cents)}</td>
                           </tr>

@@ -8,6 +8,7 @@ import type { PrecioHistorico } from '../../lib/types'
 export function SeriePrecios({ datos, alto = 200 }: { datos: PrecioHistorico[]; alto?: number }) {
   return (
     <ResponsiveContainer width="100%" height={alto}>
+      <Line
       <LineChart data={datos} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
         <CartesianGrid stroke={GRILLA} vertical={false} />
         <XAxis
@@ -35,6 +36,7 @@ export function SeriePrecios({ datos, alto = 200 }: { datos: PrecioHistorico[]; 
           }}
         />
         <Line
+          isAnimationActive={false}
           type="stepAfter"
           dataKey="price_cents"
           stroke={ACENTO}

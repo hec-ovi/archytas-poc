@@ -46,10 +46,12 @@ export function PanelSync({ recurso }: { recurso: Recurso<EstadoSync> }) {
       }
       pegado
     >
-      <div style={{ padding: 12 }}>
-        {aviso ? <div className="aviso exito">{aviso}</div> : null}
-        {error ? <div className="aviso error">{error}</div> : null}
-      </div>
+      {aviso || error ? (
+        <div style={{ padding: 12 }}>
+          {aviso ? <div className="aviso exito">{aviso}</div> : null}
+          {error ? <div className="aviso error">{error}</div> : null}
+        </div>
+      ) : null}
 
       <Bloque recurso={recurso} que="Cargando el estado de las actualizaciones">
         {(datos) => (

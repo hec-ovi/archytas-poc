@@ -74,17 +74,19 @@ export function PantallaFacturas() {
 
         <Panel
           titulo="Listado"
-          nota={`${filtradas.length} facturas · ${totales.sinRecibo} sin recibo`}
+          nota={listado.cargando
+            ? 'actualizando…'
+            : `${filtradas.length} facturas · ${totales.sinRecibo} sin recibo`}
+          pegado
         >
-          <FiltrosFacturas
-            filtros={filtros}
-            onCambiar={setFiltros}
-            proveedores={proveedores.datos?.proveedores ?? []}
-            resumen={listado.datos?.resumen ?? null}
-          />
-        </Panel>
-
-        <Panel titulo="Facturas" nota={listado.cargando ? 'actualizando…' : undefined} pegado>
+          <div style={{ padding: 12, borderBottom: '1px solid var(--linea-suave)' }}>
+            <FiltrosFacturas
+              filtros={filtros}
+              onCambiar={setFiltros}
+              proveedores={proveedores.datos?.proveedores ?? []}
+              resumen={listado.datos?.resumen ?? null}
+            />
+          </div>
           <Bloque recurso={listado} que="Cargando las facturas">
             {() => <TablaFacturas facturas={filtradas} onAbrir={setAbierta} seleccionada={abierta} alto={560} />}
           </Bloque>

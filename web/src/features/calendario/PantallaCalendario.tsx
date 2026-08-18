@@ -102,7 +102,7 @@ export function PantallaCalendario() {
       <div className="pila">
         {problema ? <div className="aviso error">{problema}</div> : null}
 
-        <div className="grilla g-2-1">
+        <div className="grilla g-cal">
           <Panel
             titulo={`${nombreMes(mes.mes - 1)} ${mes.anio}`}
             nota={`${eventos.length} vencimientos en pantalla · ${pesos(totalMes)} en el mes`}
@@ -150,8 +150,8 @@ export function PantallaCalendario() {
                   <span><span className="muestra" style={{ borderLeftColor: 'var(--verde)', background: 'var(--verde-fondo)' }} />Saldada</span>
                   <span><span className="muestra" style={{ borderLeftColor: 'var(--acento)', background: 'var(--acento-tenue)' }} />Agregado a mano</span>
                 </div>
-                <div className="fila" style={{ gap: 6 }}>
-                  <span className="marca-recibo" style={{ display: 'inline-block', width: 8, height: 8, border: '1.5px dashed var(--violeta)' }} />
+                <div className="fila" style={{ gap: 6, flexWrap: 'nowrap', alignItems: 'flex-start' }}>
+                  <span className="marca-recibo" style={{ marginTop: 4 }} />
                   <span>El cuadrado punteado marca las facturas que todavía no tienen recibo emitido.</span>
                 </div>
                 <div className="tenue">

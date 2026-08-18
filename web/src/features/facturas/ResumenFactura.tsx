@@ -23,8 +23,12 @@ export function ResumenFactura({ factura }: { factura: Factura }) {
             ({atraso(factura.days_overdue)})
           </span>
         </dd>
-        <dt>Plazo acordado</dt>
-        <dd>{factura.terms_days ? `${factura.terms_days} días` : 'sin plazo cargado'}</dd>
+        {factura.terms_days ? (
+          <>
+            <dt>Plazo acordado</dt>
+            <dd>{factura.terms_days} días</dd>
+          </>
+        ) : null}
         <dt>Mail</dt>
         <dd>{factura.supplier_email ?? '-'}</dd>
       </dl>

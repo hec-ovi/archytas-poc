@@ -8,6 +8,8 @@ const METODO: Record<string, string> = {
   persona: 'lo decidió una persona',
   exacto: 'coincide exacto',
   parecido: 'por parecido de nombre',
+  fuzzy: 'por parecido de nombre',
+  canonico: 'como figura en la ficha',
 }
 
 /** The client's "the same supplier shows up three or four different ways", shown as solved. */
