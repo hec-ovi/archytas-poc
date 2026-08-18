@@ -1,7 +1,7 @@
 """agent: el LLM con herramientas, para lo que no se puede resolver con una regla.
 
     from agent import Agent
-    respuesta = Agent(store).ask("cuanto le debemos a Herramientas Cuyo?", user="marcela")
+    respuesta = Agent(store).ask("cuanto le debemos a Cuyo?", user="marcela", rol="compras")
     respuesta.text, respuesta.as_dict()["pasos"]
 """
 
@@ -15,11 +15,11 @@ from .trace import Answer, ToolStep
 
 __all__ = [
     "Agent",
-    "DEFAULT_ROLE",
     "AgentError",
     "AgentSettings",
     "Answer",
     "ChatClient",
+    "DEFAULT_ROLE",
     "LlmError",
     "PromptLibrary",
     "ToolError",

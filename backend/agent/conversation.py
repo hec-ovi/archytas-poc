@@ -25,7 +25,7 @@ from .trace import Answer
 
 
 class Agent:
-    """One question at a time, with the whole toolbox available."""
+    """One question at a time, with the tools that person is allowed to use."""
 
     def __init__(self, store: Store, settings: AgentSettings | None = None,
                  client: ChatClient | None = None, registry: ToolRegistry | None = None,
