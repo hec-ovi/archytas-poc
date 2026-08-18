@@ -75,7 +75,9 @@ class PortalSession:
         status code alone writes an HTML login form into the database, so the body is
         checked too whenever an API path did not come back as JSON.
         """
-        if response.status_code in (401, 403):
+        # 401 is a cookie the portal refuses. 403 is not the session: it is how an expired
+        # download link answers, and re-logging in would not make it valid again.
+        if response.status_code == 401:
             return True
 
         location = response.headers.get("location", "")

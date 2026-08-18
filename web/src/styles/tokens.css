@@ -1,0 +1,42 @@
+/* The whole palette and spacing scale. Neutral paper, one accent (petrol), three state colours. */
+:root {
+  --papel: #f3f3f1;
+  --panel: #ffffff;
+  --panel-alt: #fafaf8;
+  --linea: #d6d6d0;
+  --linea-suave: #e7e7e2;
+
+  --tinta: #17181a;
+  --tinta-media: #55564f;
+  --tinta-suave: #86877e;
+
+  --acento: #0a5c66;
+  --acento-oscuro: #084850;
+  --acento-tenue: #e1eef0;
+
+  --barra: #191b1a;
+  --barra-tinta: #b6bab6;
+  --barra-tinta-fuerte: #f2f3f1;
+  --barra-linea: #2c2f2d;
+
+  --rojo: #a32d2d;
+  --rojo-fondo: #f9e9e9;
+  --ambar: #8a5a00;
+  --ambar-fondo: #f9f0dd;
+  --verde: #2c6b3f;
+  --verde-fondo: #e8f1e9;
+  --violeta: #5a4b8a;
+  --violeta-fondo: #eeebf6;
+
+  --e1: 4px;
+  --e2: 8px;
+  --e3: 12px;
+  --e4: 16px;
+  --e5: 24px;
+  --e6: 32px;
+
+  --texto: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --ancho-barra: 218px;
+}
