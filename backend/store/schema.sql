@@ -229,7 +229,9 @@ CREATE TABLE IF NOT EXISTS message (
     subject      TEXT NOT NULL DEFAULT '',
     body         TEXT NOT NULL DEFAULT '',
     invoice_id   INTEGER REFERENCES invoice (id) ON DELETE SET NULL,
-    kind         TEXT NOT NULL DEFAULT 'otro',   -- reclamo | vencimiento | otro
+    -- los avisos de stock apuntan a un producto, no a una factura
+    product_id   INTEGER REFERENCES product (id) ON DELETE SET NULL,
+    kind         TEXT NOT NULL DEFAULT 'otro',   -- reclamo | vencimiento | stock | otro
     resolved     INTEGER NOT NULL DEFAULT 0,
     resolved_by  TEXT,
     resolved_at  TEXT,

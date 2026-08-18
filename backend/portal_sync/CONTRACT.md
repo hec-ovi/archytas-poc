@@ -24,6 +24,10 @@ refresh: cuando deja de servir, vuelve a entrar sola. Usar como context manager.
 
 ### `PortalClient(session)`
 - `dataset(name)` -> `list[dict]`, las filas crudas del conjunto
+- `price_history(product_id)` -> `list[dict]` con `{fecha, precio}`, toda la historia de
+  precios de un articulo. Es la unica parte del portal que guarda historia, y no esta
+  enlazada desde el menu.
+- `product_detail(product_id)` -> `dict`, el articulo con su historial adentro
 - `envelope(name)` -> `dict`, la respuesta entera (algunos conjuntos traen campos extra al
   lado de la lista, por ejemplo `archivoId`)
 - `all_datasets()` -> `dict[str, list[dict]]`, los nueve de una
@@ -47,8 +51,24 @@ Nombres validos y de donde salen:
 - `fetch(kind, item_id)` -> `DownloadedFile(filename, content_type, content)`
 
 La descarga son dos pasos: `POST /api/token {kind, id}` devuelve una URL firmada
-`/api/descargar/<token>` con timestamp adentro, y esa URL se sigue en el momento. La URL
-vence, asi que no se guarda.
+`/api/descargar/<token>`, y esa URL se sigue en el acto. **El enlace vive 45 segundos**, asi
+que se pide justo antes de bajar y nunca se guarda.
+
+Los ocho `kind` que el portal acepta, cada uno con su idea de que es un id:
+
+| `kind` | `id` |
+|---|---|
+| `precios` | el `archivoId` de `/api/precios`, hoy `lista-precios-actual` |
+| `historial` | id de producto, `p1` |
+| `factura` | id de factura, `f89` |
+| `ventas` | el `archivoId` de `/api/ventas`, hoy `ventas-historico` |
+| `categoria` | slug de rubro, `ferreteria-gral` |
+| `cuenta` | slug de proveedor, `aceros-belgrano-sa` |
+| `recibos` | el texto `listado` |
+| `recibo` | id de pago, `pago-f7-1` |
+
+Las facturas llegan en tres formas: Excel (29), PDF con texto (25) y PDF que es una foto
+escaneada (46). Casi la mitad necesita OCR.
 
 ## Errores
 
@@ -63,7 +83,11 @@ vence, asi que no se guarda.
 
 - Devuelve los datos como vinieron: montos como texto (`"$223.376"`), fechas como texto,
   nombres de proveedor con sus variantes. Limpiarlos es tarea de `normalizer`.
-- Nunca escribe en el portal. El portal es de solo lectura salvo login y token.
+- Nunca escribe en el portal. Solo `/api/login` y `/api/token` aceptan POST, y ninguno
+  modifica datos: el portal es de solo lectura.
+- Una respuesta sin sesion puede volver como 307, como 401, o como 200 con el HTML del
+  login adentro. Las tres se tratan como sesion caida, asi que nunca entra un formulario
+  de login a la base creyendo que son datos.
 - Las URL firmadas se consumen enseguida y no se persisten.
 
 ## Depende de

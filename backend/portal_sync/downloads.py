@@ -15,6 +15,22 @@ from .session import PortalSession
 
 TOKEN_PATH = "/api/token"
 
+# The portal accepts exactly these eight kinds, each with its own idea of what an id is.
+# Anything else comes back as "pedido invalido".
+KINDS: dict[str, str] = {
+    "precios": "el `archivoId` de /api/precios, hoy `lista-precios-actual`",
+    "historial": "id de producto, `p1`",
+    "factura": "id de factura, `f89`",
+    "ventas": "el `archivoId` de /api/ventas, hoy `ventas-historico`",
+    "categoria": "slug de rubro, `ferreteria-gral`",
+    "cuenta": "slug de proveedor, `aceros-belgrano-sa`",
+    "recibos": "el texto `listado`",
+    "recibo": "id de pago, `pago-f7-1`",
+}
+
+# A signed link lives 45 seconds. It is minted right before the download and never stored.
+TOKEN_TTL_SECONDS = 45
+
 
 @dataclass(frozen=True)
 class DownloadedFile:
@@ -36,6 +52,8 @@ class PortalDownloader:
         self._session = session
 
     def signed_url(self, kind: str, item_id: str) -> str:
+        if kind not in KINDS:
+            raise PortalBadResponse(f"unknown download kind {kind!r}; known: {sorted(KINDS)}")
         response = self._session.request("POST", TOKEN_PATH, json={"kind": kind, "id": item_id})
         if response.status_code != 200:
             raise PortalBadResponse(f"token for {kind}:{item_id} returned {response.status_code}")
