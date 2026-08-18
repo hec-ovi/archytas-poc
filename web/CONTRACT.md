@@ -27,9 +27,9 @@ en castellano en vez de una pantalla vacía.
 |---|---|---|
 | Entrar | los tres usuarios y la clave | `POST /api/auth/login` |
 | Tablero | primero lo que necesita atencion (vence pronto, sin recibo, ordenes olvidadas, pendientes de revision, ventas fuera del total), despues deuda por proveedor, facturacion por mes y compras por rubro | `GET /api/tablero` |
-| Calendario | mes navegable, un chip por vencimiento con proveedor y saldo, color por estado de pago y marca cuando falta el recibo. Se agrega a mano y se mueve arrastrando | `GET/POST/PATCH/DELETE /api/calendario` |
+| Calendario | mes navegable con las flechas a los costados del mes, un chip por vencimiento con proveedor y saldo, color por estado de pago y marca cuando falta el recibo. Se agrega a mano y se mueve arrastrando | `GET/POST/PATCH/DELETE /api/calendario` |
 | Proveedores | posicion de cada uno, cumplimiento del plazo, y el detalle con contacto, facturas, pagos, ordenes, mensajes y todas las formas en que aparece escrito el nombre | `GET /api/proveedores`, `GET /api/proveedores/{slug}` |
-| Facturas | listado filtrable por estado, proveedor, formato del archivo y recibo. Detalle con pagos, recibo, archivo original y las tres acciones | `GET /api/facturas`, `GET /api/facturas/{id}`, `GET /api/facturas/{id}/archivo`, `POST .../pagos`, `POST .../recibo`, `PATCH /api/facturas/{id}` |
+| Facturas | listado filtrable por estado, proveedor, formato del archivo y recibo, y ordenable tocando cualquier encabezado. Detalle con pagos, recibo, archivo original y las tres acciones | `GET /api/facturas`, `GET /api/facturas/{id}`, `GET /api/facturas/{id}/archivo`, `POST .../pagos`, `POST .../recibo`, `PATCH /api/facturas/{id}` |
 | Ordenes de compra | las olvidadas arriba, despues todas con filtro por estado | `GET /api/ordenes` |
 | Ventas | facturacion por mes y por rubro, top productos y clientes, y el panel de las filas excluidas con el motivo de cada una | `GET /api/ventas` |
 | Productos | catalogo con rubro y stock, stock bajo, productos nuevos, e historia de precios por articulo | `GET /api/productos`, `GET /api/productos/{id}/precios` |
@@ -68,6 +68,9 @@ Una carpeta por pantalla en `src/features/`, y tres piezas compartidas:
 - Los textos estan en castellano rioplatense. Los comentarios del codigo, en ingles.
 - Los montos van a la derecha con numeros de ancho fijo.
 - Las tablas anchas scrollean adentro de su caja, nunca la pagina.
+- Los encabezados que ordenan se tocan enteros. La columna activa muestra hacia donde
+  ordena; las demas, una flecha doble tenue para que se vea que se pueden tocar. Los montos,
+  las fechas y el atraso arrancan de mayor a menor, que es como se preguntan.
 - Toda pantalla dice si esta cargando y muestra el error de la api tal cual viene, en
   castellano. Una pantalla en blanco sin explicacion es un bug.
 

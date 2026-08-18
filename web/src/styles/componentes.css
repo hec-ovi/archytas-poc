@@ -542,3 +542,47 @@ table.tabla tfoot td {
     grid-template-columns: max-content minmax(0, 1fr);
   }
 }
+
+/* Sortable column headers. The whole header is the target, and an inactive column shows a
+   faint double arrow so it is visible that it can be ordered at all. */
+table.tabla th.ordenable {
+  padding: 0;
+}
+
+table.tabla th .th-boton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+table.tabla th.num .th-boton {
+  justify-content: flex-end;
+}
+
+table.tabla th .th-boton:hover {
+  background: #ececea;
+  color: var(--tinta);
+}
+
+table.tabla th .th-flecha {
+  font-size: 8px;
+  opacity: 0.25;
+}
+
+table.tabla th.ordenando {
+  color: var(--tinta);
+}
+
+table.tabla th.ordenando .th-flecha {
+  opacity: 1;
+  color: var(--acento);
+}

@@ -96,6 +96,9 @@ export function PantallaCalendario() {
     }
   }
 
+  const actual = mesDeHoy()
+  const esMesDeHoy = mes.anio === actual.anio && mes.mes === actual.mes
+
   const delDia = eventos.filter((evento) => evento.on_date === diaElegido)
   const totalMes = eventos
     .filter((evento) => evento.on_date.startsWith(`${mes.anio}-${String(mes.mes).padStart(2, '0')}`))
@@ -106,12 +109,7 @@ export function PantallaCalendario() {
       titulo="Calendario de vencimientos"
       subtitulo="Arrastrá un vencimiento a otro día para moverlo. Lo que cambie otra persona aparece acá solo."
       acciones={
-        <>
-          <Boton onClick={() => irAlMes(correrMes(mes, -1))}>‹ Mes anterior</Boton>
-          <Boton onClick={() => irAlMes(mesDeHoy())}>Hoy</Boton>
-          <Boton onClick={() => irAlMes(correrMes(mes, 1))}>Mes siguiente ›</Boton>
-          <Boton variante="principal" onClick={() => setAgregando(true)}>Agregar vencimiento</Boton>
-        </>
+        <Boton variante="principal" onClick={() => setAgregando(true)}>Agregar vencimiento</Boton>
       }
     >
       <div className="pila">
@@ -119,7 +117,34 @@ export function PantallaCalendario() {
 
         <div className="grilla g-cal">
           <Panel
-            titulo={`${nombreMes(mes.mes - 1)} ${mes.anio}`}
+            titulo={
+              <span className="cal-navegacion">
+                <button
+                  type="button"
+                  className="cal-flecha"
+                  onClick={() => irAlMes(correrMes(mes, -1))}
+                  aria-label="Mes anterior"
+                  title="Mes anterior"
+                >
+                  ‹
+                </button>
+                <span className="cal-mes">{nombreMes(mes.mes - 1)} {mes.anio}</span>
+                <button
+                  type="button"
+                  className="cal-flecha"
+                  onClick={() => irAlMes(correrMes(mes, 1))}
+                  aria-label="Mes siguiente"
+                  title="Mes siguiente"
+                >
+                  ›
+                </button>
+                {esMesDeHoy ? null : (
+                  <button type="button" className="cal-hoy" onClick={() => irAlMes(mesDeHoy())}>
+                    Volver a hoy
+                  </button>
+                )}
+              </span>
+            }
             nota={`${eventos.length} vencimientos en pantalla · ${pesos(totalMes)} en el mes`}
             pegado
           >
