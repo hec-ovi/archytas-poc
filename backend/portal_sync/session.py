@@ -68,8 +68,20 @@ class PortalSession:
 
     @staticmethod
     def _session_died(response: httpx.Response) -> bool:
-        """Logged-out requests are bounced to the login page instead of returning 401."""
+        """Detect a logged-out request.
+
+        The portal does not answer 401. Sometimes it redirects to /login, and sometimes it
+        answers 200 with the login page as the body, content type and all. Trusting the
+        status code alone writes an HTML login form into the database, so the body is
+        checked too whenever an API path did not come back as JSON.
+        """
         if response.status_code in (401, 403):
             return True
+
         location = response.headers.get("location", "")
-        return response.status_code in (302, 303, 307) and "/login" in location
+        if response.status_code in (302, 303, 307) and "/login" in location:
+            return True
+
+        if response.status_code == 200 and "text/html" in response.headers.get("content-type", ""):
+            return "/api/login" in response.text or "login-box" in response.text
+        return False

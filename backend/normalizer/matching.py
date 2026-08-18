@@ -93,3 +93,39 @@ class CatalogMatcher:
     @staticmethod
     def _best_score(raw: str, entry: CatalogEntry) -> float:
         return max(similarity(raw, spelling) for spelling in entry.spellings())
+
+
+def build_catalog(values: list[str], threshold: float = STRONG) -> CatalogMatcher:
+    """Derive a catalog from raw values, when nobody ever wrote down the real list.
+
+    Supplier names have an authority to match against (the account statements carry CUIT and
+    a canonical name). Product categories have none: the client typed them freely for years.
+    So the real rubros have to be discovered from the spellings themselves.
+
+    Values are grouped by similarity, and each group keeps its most complete spelling as the
+    canonical one, on the reasoning that abbreviations are shortenings of a full name that
+    someone, at some point, wrote out.
+    """
+    groups: list[list[str]] = []
+    for value in sorted({v.strip() for v in values if v and v.strip()}, key=len, reverse=True):
+        for group in groups:
+            if any(similarity(value, member) >= threshold for member in group):
+                group.append(value)
+                break
+        else:
+            groups.append([value])
+
+    matcher = CatalogMatcher()
+    for group in groups:
+        canonical = max(group, key=lambda v: (len(tokens_of(v)), len(v)))
+        matcher.add(CatalogEntry(key=slugify(canonical), name=canonical, aliases=tuple(g for g in group if g != canonical)))
+    return matcher
+
+
+def tokens_of(value: str) -> list[str]:
+    from .text import tokens
+    return tokens(value)
+
+
+def slugify(value: str) -> str:
+    return "-".join(fold(value).split()) or "sin-nombre"

@@ -10,10 +10,13 @@ import re
 import unicodedata
 from difflib import SequenceMatcher
 
-# "S.R.L.", "SRL", "S.A.", "SA", "SAS", "SACIF" and friends carry no identity
-LEGAL_SUFFIXES = {
+# Words that carry no identity: company forms ("S.R.L.", "SA", "SACIF") and the connectors
+# people drop as they type ("Distribuidora Metalica del Sur" and "Distribuidora Metalica
+# Sur" are one company).
+NOISE_TOKENS = {
     "srl", "sa", "sas", "sacif", "saci", "sca", "scs", "sh", "ltda", "ltd", "inc",
     "cia", "y", "e", "hijos", "hnos", "hermanos",
+    "de", "del", "la", "el", "los", "las",
 }
 
 # words people abbreviate when they get tired of typing
@@ -56,7 +59,7 @@ def tokens(value: str) -> list[str]:
     out = []
     for token in fold(value).split():
         token = ABBREVIATIONS.get(token, token)
-        if token in LEGAL_SUFFIXES or len(token) < 2:
+        if token in NOISE_TOKENS or len(token) < 2:
             continue
         out.append(token)
     return out
@@ -88,8 +91,23 @@ def _best_token_alignment(left: set[str], right: set[str]) -> float:
     """Average of each left token's best match on the right, and the other way round."""
     def one_way(source: set[str], target: set[str]) -> float:
         return sum(
-            max(SequenceMatcher(None, item, other).ratio() for other in target)
+            max(_token_score(item, other) for other in target)
             for item in source
         ) / len(source)
 
     return min(one_way(left, right), one_way(right, left))
+
+
+def _token_score(left: str, right: str) -> float:
+    """How much two words look like the same word.
+
+    People truncate as they type: `Pint. Reunidas` for `Pinturerias Reunidas`, `Electrical
+    Supply Arg.` for `Electrical Supply Argentina`. A word that starts the other word is
+    almost certainly that word, and plain character similarity scores those far too low.
+    """
+    if left == right:
+        return 1.0
+    shorter, longer = sorted((left, right), key=len)
+    if len(shorter) >= 3 and longer.startswith(shorter):
+        return 0.97
+    return SequenceMatcher(None, left, right).ratio()

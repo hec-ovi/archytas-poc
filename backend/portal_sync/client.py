@@ -50,6 +50,21 @@ class PortalClient:
     def all_datasets(self) -> dict[str, list[dict[str, Any]]]:
         return {name: self.dataset(name) for name in DATASETS}
 
+    def price_history(self, product_id: str) -> list[dict[str, Any]]:
+        """Every price this article has had, oldest first.
+
+        The price list only shows today. This detail route is the only place the portal
+        keeps history, and it is not linked from the menu.
+        """
+        payload = self._get_json(f"/api/precios/{product_id}")
+        history = payload.get("historial")
+        if not isinstance(history, list):
+            raise PortalBadResponse(f"/api/precios/{product_id} has no historial list")
+        return history
+
+    def product_detail(self, product_id: str) -> dict[str, Any]:
+        return self._get_json(f"/api/precios/{product_id}")
+
     def _get_json(self, path: str) -> dict[str, Any]:
         response = self._session.request("GET", path)
         if response.status_code != 200:
