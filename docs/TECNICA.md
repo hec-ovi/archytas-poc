@@ -329,9 +329,10 @@ cambiar dos variables de entorno.
 
 Con honestidad, que es lo que se pidio:
 
-- **La ventana de 45 segundos del enlace de descarga** esta respetada, pero no se bajan los
-  100 archivos de factura en cada pasada: se bajan cuando alguien abre la factura. Bajar todo
-  siempre serian 100 pedidos extra por pasada para archivos que casi nadie mira.
+- **La ventana de 45 segundos del enlace de descarga** esta respetada: el archivo de una
+  factura se pide al portal en el momento en que alguien la abre
+  (`GET /api/facturas/{id}/archivo`), no en cada pasada. Bajar los 100 siempre serian 100
+  pedidos extra por pasada para archivos que casi nadie mira.
 - **La historia de precios son 100 pedidos** al portal, asi que es opcional en la pasada
   (`con_historial=true`). Corre bien, pero tarda unos minutos y no hace falta dos veces por
   dia.
