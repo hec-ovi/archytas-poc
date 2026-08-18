@@ -7,6 +7,7 @@ checkout gives a working system.
 
 from __future__ import annotations
 
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -41,12 +42,34 @@ async def lifespan(app: FastAPI):
     app.state.scheduler = AlertScheduler(app.state.alerts, app.state.store)
     app.state.scheduler.start()
 
+    # an empty database is nobody's idea of a working system, so the first pass runs on its
+    # own. It is a background task: the server answers while the data is still coming in.
+    if app.state.store.invoices.count() == 0 and settings.portal_user:
+        asyncio.get_running_loop().run_in_executor(None, _first_sync, app)
+
     yield
 
     app.state.scheduler.stop()
     app.state.agent.close()
     app.state.notifier.close()
     app.state.store.close()
+
+
+def _first_sync(app: FastAPI) -> None:
+    """Fill a brand new database from the portal, once, without blocking startup."""
+    from ingest import IngestRunner
+    from portal_sync.client import PortalClient
+    from portal_sync.session import PortalSession
+
+    settings = app.state.settings
+    session = PortalSession(settings.portal_base_url, settings.portal_user, settings.portal_password)
+    try:
+        IngestRunner(app.state.store, PortalClient(session)).run("primer-arranque", with_price_history=True)
+    except Exception as error:
+        # a first pass that fails must not take the server down: the button is still there
+        print(f"[cordillera] la primera sincronizacion fallo: {error}")
+    finally:
+        session.close()
 
 
 def create_app() -> FastAPI:

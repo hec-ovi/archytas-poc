@@ -16,7 +16,7 @@ from .passwords import hash_password
 DEFAULT_USERS = [
     ("marcela", "Marcela", "compras"),
     ("julian", "Julian", "ventas"),
-    ("duenio", "Duenio", "duenio"),
+    ("duenio", "Dueño", "duenio"),
 ]
 
 DEFAULT_SETTINGS: list[tuple[str, Any, str]] = [

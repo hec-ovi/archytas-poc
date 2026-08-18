@@ -2,124 +2,120 @@
 
 Sistema de gestion para Ferreteria Industrial Cordillera.
 
-Toma los datos del portal viejo (SIGProv), los ordena, y los deja en un solo lugar donde se
-entienden de un vistazo: que le debemos a cada proveedor, que vence esta semana, cuanto
+Le saca los datos al portal viejo, los ordena, y los deja en una sola pantalla que se
+entiende de un vistazo: que vence esta semana, cuanto le debemos a cada proveedor, cuanto
 vendimos, y que hay que mirar porque el sistema no quiso adivinarlo.
 
-## Que resuelve
+## Correrlo
 
-- **Los precios siempre actualizados**, sin que nadie entre a bajar el archivo del dia.
-- **Las facturas en un solo lugar**, vengan como PDF prolijo, como foto escaneada o como
-  planilla desprolija.
-- **Un proveedor es un proveedor**, aunque aparezca escrito de cuatro maneras distintas.
-- **Los numeros del negocio a la vista**: facturacion por mes, precios, stock, productos
-  nuevos, y las ventas rotas separadas en vez de sumadas.
-- **Que le debemos a cada uno y hace cuanto**, con el plazo pactado y si lo estamos
-  cumpliendo.
-- **Las facturas pagas a medias**, saldadas y sin tocar, cada una con su saldo real.
-- **Las ordenes de compra que quedaron esperando**, para no pedir dos veces lo mismo.
-- **El gasto por rubro**, con los rubros unificados.
-- **Los avisos que llegan a donde se miran**: WhatsApp, no una bandeja que nadie abre.
-- **Un calendario de vencimientos** que se puede mover y que dos personas ven al mismo
-  tiempo.
-- **Cada uno entra a lo suyo**: Marcela a compras, Julian a ventas, el duenio a todo.
-
-## Como correrlo
-
-Hace falta Docker y un servidor de modelo compatible con OpenAI (por defecto, el llama.cpp
-que corre en la misma maquina en el puerto 8080).
+Hace falta Docker. Nada mas.
 
 ```bash
-git clone <este-repo> && cd archytas-poc
 cp .env.example .env
-docker compose up --build
 ```
 
-Antes de levantar, completar en `.env` el usuario y la clave del portal SIGProv (son los que
-figuran en el enunciado):
+Abrir `.env` y completar el usuario y la clave del portal (los del enunciado):
 
 ```
 PORTAL_USER=...
 PORTAL_PASSWORD=...
 ```
 
-- Sistema: http://localhost:5173
-- API: http://localhost:8100 (documentacion en http://localhost:8100/docs)
-
-La base se crea sola en el primer arranque, vacia. Para llenarla con los datos del portal,
-entrar como `duenio` y tocar "Actualizar ahora" en Configuracion, o desde la consola:
+Y arrancar:
 
 ```bash
-curl -s -c galletas.txt -X POST http://localhost:8100/api/auth/login \
-  -H 'Content-Type: application/json' \
-  -d '{"usuario":"duenio","clave":"cordillera2026"}'
-
-curl -s -b galletas.txt -X POST http://localhost:8100/api/sync
+docker compose up --build
 ```
 
-La pasada tarda unos 15 segundos. Agregando `?con_historial=true` trae ademas toda la
-historia de precios de cada articulo (unos 50 segundos, 100 pedidos mas al portal).
+Listo. Entrar a **http://localhost:5173**.
 
-### Usuarios
+La primera vez se trae sola toda la informacion del portal. Tarda un minuto: mientras tanto
+la pantalla ya se puede abrir y se va llenando.
 
-| Usuario | Clave | Entra a |
+## Usuarios
+
+Los tres entran con la clave `cordillera2026`.
+
+| Usuario | Ve |
+|---|---|
+| `duenio` | todo |
+| `marcela` | compras: proveedores, facturas, ordenes, calendario, revision, mensajes |
+| `julian` | ventas: tablero, ventas, productos |
+
+## Que hace
+
+- **Calendario de vencimientos.** Se arrastra para reprogramar, marca las facturas que
+  todavia no tienen recibo, y si hay dos personas mirando, las dos ven los cambios al toque.
+- **Proveedores.** Cuanto le compre, cuanto le pague, cuanto le debo y hace cuanto. Con el
+  CUIT y el mail. El mismo proveedor aparecia escrito de 25 formas distintas: son 8.
+- **Facturas.** Cuales estan saldadas, a medias y sin tocar. Se registra un pago, se emite
+  el recibo y se ajusta un monto desde la misma pantalla.
+- **Ventas.** Facturacion por mes y por rubro. Las ventas cargadas dos veces o con datos
+  rotos **no se suman**: quedan aparte, listadas, con el motivo de cada una.
+- **Revision.** Todo lo que el sistema no pudo resolver solo espera ahi, con lo que sospecha
+  y cuanta confianza le tiene. Se resuelve de un clic y lo aprende para siempre.
+- **Avisos.** Cuando una factura esta por vencer sin recibo, cuando hay un reclamo sin
+  responder, cuando una orden quedo olvidada. Salen por WhatsApp si esta configurado, y si
+  no quedan en la bandeja del sistema.
+- **Subir una factura.** PDF, foto escaneada o Excel desprolijo. Lee lo que puede y avisa lo
+  que no, en vez de inventarlo.
+- **Preguntarle.** "Cuanto le debemos a Herramientas Cuyo", "que vence esta semana sin
+  recibo". Contesta y muestra de donde saco cada numero.
+
+## Configuracion
+
+Lo del dia a dia se cambia desde la pantalla de **Configuracion**, sin tocar nada: cada
+cuanto se actualiza, con cuantos dias de anticipacion avisar, desde que monto, y a los
+cuantos dias una orden se considera olvidada.
+
+Lo demas vive en `.env`:
+
+| Variable | Para que | Si se deja vacia |
 |---|---|---|
-| `duenio` | `cordillera2026` | todo |
-| `marcela` | `cordillera2026` | proveedores, facturas, ordenes, calendario, revision, mensajes |
-| `julian` | `cordillera2026` | tablero, ventas, productos |
+| `PORTAL_USER`, `PORTAL_PASSWORD` | entrar al portal | no se trae nada |
+| `LLM_BASE_URL`, `LLM_MODEL` | el modelo que usa el asistente | usa el llama.cpp de esta maquina |
+| `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_ID`, `WHATSAPP_RECIPIENTS` | mandar avisos por WhatsApp | los avisos quedan en la bandeja |
+| `SECRET_KEY` | firma las sesiones | conviene cambiarla |
 
-### Sin Docker
+Para que WhatsApp funcione de verdad hace falta una linea de telefono dedicada y una cuenta
+de Meta Business. Los pasos exactos estan en `backend/notify/CONTRACT.md`.
+
+## Correrlo sin Docker
 
 ```bash
 uv venv --python 3.13 .venv
 uv pip install --python .venv/bin/python -r backend/requirements.txt
 CORDILLERA_DATA_DIR=./data .venv/bin/python -m uvicorn api.main:app --app-dir backend --port 8100
+
 cd web && npm install && npm run dev
 ```
 
-Para leer facturas escaneadas hace falta tesseract con el paquete de espanol
-(`apt install tesseract-ocr tesseract-ocr-spa`). En Docker ya viene.
-
-## Configuracion
-
-Todo se ajusta desde `.env`. Lo que importa:
-
-| Variable | Para que |
-|---|---|
-| `PORTAL_BASE_URL`, `PORTAL_USER`, `PORTAL_PASSWORD` | el portal de donde salen los datos. Usuario y clave van vacios en el ejemplo a proposito: no viajan en el repo |
-| `LLM_BASE_URL`, `LLM_MODEL` | el modelo que usa el agente. Por defecto el llama.cpp local |
-| `NOTIFY_CHANNELS` | `whatsapp`, `telegram` o `bandeja`. Sin credenciales, todo cae en la bandeja local |
-| `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_ID`, `WHATSAPP_RECIPIENTS` | ver `backend/notify/CONTRACT.md` |
-| `SECRET_KEY` | firma las sesiones. Cambiar antes de usarlo en serio |
-
-Los parametros del negocio (cada cuanto se actualiza, con cuantos dias de anticipacion
-avisar, desde que monto) se cambian desde la pantalla de Configuracion, sin tocar codigo.
+Para leer facturas escaneadas hace falta `tesseract-ocr` y `tesseract-ocr-spa`. En Docker ya
+vienen.
 
 ## Como esta armado
 
-El proyecto es un conjunto de cajas. Cada una hace una cosa y lleva su `CONTRACT.md`: para
-usar una caja alcanza con leer su contrato.
+El proyecto son cajas. Cada una hace una cosa y lleva su `CONTRACT.md`: para usar una caja
+alcanza con leer su contrato, nunca su codigo.
 
 | Caja | Que hace |
 |---|---|
-| `backend/portal_sync` | lee el portal: los nueve conjuntos de datos y las descargas |
+| `backend/portal_sync` | lee el portal viejo |
 | `backend/normalizer` | fechas, montos, nombres de proveedor, rubros, duplicados |
-| `backend/store` | la base SQLite, los repositorios y las vistas de negocio |
-| `backend/document_parser` | archivo a campos de factura, con OCR para los escaneados |
-| `backend/ingest` | orquesta la pasada completa: trae, normaliza, guarda |
-| `backend/agent` | el modelo con herramientas para cargar, consultar y actualizar |
-| `backend/alerts` | las reglas de aviso y su programacion |
-| `backend/notify` | la entrega: WhatsApp, Telegram o bandeja local |
-| `backend/api` | HTTP, roles y el canal de tiempo real |
+| `backend/store` | la base y las consultas de negocio |
+| `backend/document_parser` | un archivo a campos de factura, con OCR |
+| `backend/ingest` | la pasada completa: trae, normaliza, guarda |
+| `backend/agent` | el asistente con sus herramientas |
+| `backend/alerts` | las reglas de aviso |
+| `backend/notify` | manda el mensaje |
+| `backend/api` | HTTP, usuarios y tiempo real |
 | `web` | la interfaz |
 
-El mapa completo con las dependencias esta en `docs/INDEX.md`. Las decisiones y el por que
-de cada una, en `docs/TECNICA.md`.
+El mapa con las dependencias esta en `docs/INDEX.md`. Por que cada cosa se hizo asi, en
+`docs/TECNICA.md`.
 
 ## Tests
 
 ```bash
 .venv/bin/python -m pytest
 ```
-
-Cada caja prueba lo que promete su contrato, a traves de su entrada real.
