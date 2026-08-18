@@ -1,1 +1,18 @@
+# raw client/user material, not published
 docs/prueba-tecnica-fde.pdf
+docs/REQUIREMENTS.md
+docs/IDEA.md
+
+# runtime
+.env
+*.db
+*.db-wal
+*.db-shm
+data/store/
+data/inbox/
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+dist/
+.pytest_cache/
