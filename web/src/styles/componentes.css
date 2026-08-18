@@ -532,3 +532,13 @@ table.tabla tfoot td {
   background: var(--panel);
   padding: 8px 12px;
 }
+
+.definiciones.dos-columnas {
+  grid-template-columns: max-content minmax(0, 1fr) max-content minmax(0, 1fr);
+}
+
+@media (max-width: 1200px) {
+  .definiciones.dos-columnas {
+    grid-template-columns: max-content minmax(0, 1fr);
+  }
+}

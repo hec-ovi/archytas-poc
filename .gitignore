@@ -8,8 +8,8 @@ docs/IDEA.md
 *.db
 *.db-wal
 *.db-shm
-data/store/
-data/inbox/
+# la base, los archivos subidos y la bandeja de avisos se crean al correr
+data/
 __pycache__/
 *.pyc
 .venv/
