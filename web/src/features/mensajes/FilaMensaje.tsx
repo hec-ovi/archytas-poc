@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { fecha } from '../../lib/format'
 import { Boton } from '../../ui/Boton'
 import { Chapa } from '../../ui/Chapa'
@@ -14,9 +13,10 @@ interface Props {
   mensaje: Mensaje
   trabajando: boolean
   onResolver: () => void
+  onAbrirFactura: (id: number) => void
 }
 
-export function FilaMensaje({ mensaje, trabajando, onResolver }: Props) {
+export function FilaMensaje({ mensaje, trabajando, onResolver, onAbrirFactura }: Props) {
   return (
     <li className={mensaje.resolved ? 'msj resuelto' : 'msj'}>
       <div>
@@ -47,10 +47,10 @@ export function FilaMensaje({ mensaje, trabajando, onResolver }: Props) {
             {trabajando ? 'Cerrando…' : 'Marcar resuelto'}
           </Boton>
         )}
-        {mensaje.invoice_number ? (
-          <Link to={`/facturas`} className="tenue" style={{ fontSize: 11.5 }}>
-            Factura {mensaje.invoice_number}
-          </Link>
+        {mensaje.invoice_id && mensaje.invoice_number ? (
+          <Boton chico variante="plano" onClick={() => onAbrirFactura(mensaje.invoice_id as number)}>
+            Ver factura {mensaje.invoice_number}
+          </Boton>
         ) : null}
       </div>
     </li>

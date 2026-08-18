@@ -1,6 +1,20 @@
 // Turning a click on a candidate into the payload `/api/revision/{id}/resolver` expects.
 
+import { numero, pesos } from '../../lib/format'
 import type { CandidatoRevision, PendienteRevision, VentaExcluida } from '../../lib/types'
+
+/** The portal sends amounts in whole pesos inside a raw row; the rest of the app talks cents. */
+export function textoCandidato(candidato: CandidatoRevision): string {
+  if (candidato.fila) {
+    const cantidad = candidato.fila.cantidad
+    const total = Number(candidato.fila.total)
+    if (cantidad && Number.isFinite(total)) {
+      return `${numero(Number(cantidad))} unidades por ${pesos(total * 100)}`
+    }
+  }
+  if (typeof candidato.valor === 'number') return pesos(candidato.valor)
+  return String(candidato.valor)
+}
 
 /** The raw row of a duplicate carries no hash, so it is matched against the stored sale. */
 export function huellaDeFila(

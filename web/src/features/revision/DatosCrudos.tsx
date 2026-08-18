@@ -38,7 +38,7 @@ function texto(valor: unknown, centavos?: boolean): string {
 /** What actually arrived, field by field, with nothing hidden. */
 export function DatosCrudos({ datos }: { datos: Record<string, unknown> }) {
   const conocidos = CAMPOS.filter((campo) => campo.clave in datos)
-  const restantes = Object.keys(datos)
+  const restantes: Campo[] = Object.keys(datos)
     .filter((clave) => !OCULTOS.has(clave) && !CAMPOS.some((campo) => campo.clave === clave))
     .map((clave) => ({ clave, etiqueta: clave }))
   const filas = [...conocidos, ...restantes]

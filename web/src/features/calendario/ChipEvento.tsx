@@ -9,6 +9,13 @@ interface Props {
   arrastrando: boolean
 }
 
+const SUFIJOS = /\s+(S\.?A\.?|S\.?R\.?L\.?|SAS|SACIF)\.?$/i
+
+/** Chips are narrow: the legal suffix is the first thing that can go. */
+function nombreCorto(nombre: string): string {
+  return nombre.replace(SUFIJOS, '')
+}
+
 export function claseEstado(evento: EventoCalendario): string {
   if (evento.kind !== 'vencimiento') return 'recordatorio'
   return evento.payment_state ?? 'impaga'
@@ -35,7 +42,7 @@ export function ChipEvento({ evento, onAbrir, onArrastrar, onSoltar, arrastrando
       }}
       title={`${evento.supplier_name ?? evento.title}. Arrastralo a otro día para mover el vencimiento.`}
     >
-      <span className="proveedor">{evento.supplier_name ?? evento.title}</span>
+      <span className="proveedor">{nombreCorto(evento.supplier_name ?? evento.title)}</span>
       <span className="monto">
         <span>{pesos(monto)}</span>
         {sinRecibo ? <span className="marca-recibo" title="Todavía sin recibo emitido" /> : null}

@@ -40,7 +40,6 @@ export function BarrasCategoria({ datos, alto, tituloValor = 'Total' }: Props) {
             )
           }}
         />
-        <Bar
         <Bar isAnimationActive={false} dataKey="valor" fill={ACENTO} maxBarSize={16} name={tituloValor} />
       </BarChart>
     </ResponsiveContainer>

@@ -14,7 +14,7 @@ interface Props {
   onArrastrar: (id: number) => void
   onSoltarChip: () => void
   onEntrar: (fecha: string | null) => void
-  onSoltarEnDia: (fecha: string) => void
+  onSoltarEnDia: (fecha: string, id: number) => void
 }
 
 const MAXIMO_VISIBLE = 3
@@ -45,7 +45,9 @@ export function CeldaDia(props: Props) {
       onDrop={(e) => {
         e.preventDefault()
         props.onEntrar(null)
-        props.onSoltarEnDia(casilla.fecha)
+        // the id travels in the drag payload, not in state, so the drop never guesses
+        const id = Number(e.dataTransfer.getData('text/plain'))
+        if (Number.isFinite(id) && id > 0) props.onSoltarEnDia(casilla.fecha, id)
       }}
     >
       <div className="cal-tope">

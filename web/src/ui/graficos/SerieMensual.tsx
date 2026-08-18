@@ -21,7 +21,6 @@ interface Props {
 export function SerieMensual({ datos, alto = 220 }: Props) {
   return (
     <ResponsiveContainer width="100%" height={alto}>
-      <Area
       <AreaChart data={datos} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
         <CartesianGrid stroke={GRILLA} vertical={false} />
         <XAxis

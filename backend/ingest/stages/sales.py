@@ -173,23 +173,39 @@ class SaleStage:
             self._raise_broken(code, parsed, "faltan datos y no alcanzan para deducir el resto")
             return "rota", "faltan cantidad, precio o total y no se pueden deducir"
 
+        # a quantity that is negative or zero is a typing slip, and it shows: the total almost
+        # always matches the quantity without its sign. Naming that is more useful than
+        # reporting the multiplication as off by a factor of minus one.
+        if parsed["quantity"] <= 0:
+            corrected = abs(parsed["quantity"])
+            matches = corrected * parsed["unit_cents"] == parsed["total_cents"]
+            detail = (f"la cantidad vino como {parsed['quantity']}. Con {corrected} el total cierra exacto"
+                      if matches else f"la cantidad vino como {parsed['quantity']}, que no puede ser")
+            self._raise_broken(code, parsed, detail,
+                               proposal=corrected if matches else None, field="quantity")
+            return "rota", f"cantidad invalida: {parsed['quantity']}"
+
         expected = parsed["quantity"] * parsed["unit_cents"]
         if expected != parsed["total_cents"]:
-            factor = parsed["total_cents"] / expected if expected else 0
-            hint = f" (el total es {factor:.0f} veces lo que deberia)" if factor and abs(factor - round(factor)) < 0.01 else ""
+            factor = parsed["total_cents"] / expected
+            hint = f" (el total es {factor:.0f} veces lo que deberia)" if abs(factor - round(factor)) < 0.01 and factor > 1 else ""
             self._raise_broken(
                 code, parsed,
                 f"cantidad por precio da {expected}, pero el total dice {parsed['total_cents']}{hint}",
-                proposal=expected,
+                proposal=expected, field="total_cents",
             )
             return "rota", f"el total no cierra con cantidad por precio{hint}"
 
         return "valida", "; ".join(parsed["repairs"])
 
-    def _raise_broken(self, code: str, parsed: dict, detail: str, proposal: int | None = None) -> None:
+    def _raise_broken(self, code: str, parsed: dict, detail: str, proposal: int | None = None,
+                      field: str = "total_cents") -> None:
         candidates = []
         if proposal is not None:
-            candidates.append({"valor": proposal, "puntaje": 0.9, "nota": "cantidad por precio unitario"})
+            nota = ("la cantidad sin el signo" if field == "quantity" else "cantidad por precio unitario")
+            # the field travels with the proposal so whoever accepts it does not have to know
+            # which column the correction belongs in
+            candidates.append({"valor": proposal, "puntaje": 0.9, "nota": nota, "campo": field})
         self._review.conflict(
             kind="venta-rota",
             key=code,

@@ -69,6 +69,8 @@ VENTAS = [
      "cantidad": "1", "precioUnit": "1000", "total": "1000"},
     {"codigo": "V-5", "fecha": "2026-01-09", "productoId": "p1", "cliente": "Cliente E",
      "cantidad": "N/A", "precioUnit": "1000", "total": "4000"},
+    {"codigo": "V-6", "fecha": "2026-01-10", "productoId": "p1", "cliente": "Cliente F",
+     "cantidad": "-7", "precioUnit": "1000", "total": "7000"},
 ]
 
 ORDENES = [
@@ -182,6 +184,19 @@ class TestSales:
         sale = self.by_code(store, "V-5")[0]
         assert sale["status"] == "valida" and sale["quantity"] == 4
         assert sale["extra"]["reparaciones"]
+
+    def test_a_negative_quantity_is_named_as_such_not_as_bad_arithmetic(self, result):
+        store, _ = result
+        sale = self.by_code(store, "V-6")[0]
+        assert sale["status"] == "rota"
+        assert "cantidad" in sale["status_note"]
+
+    def test_the_proposal_says_which_column_it_corrects(self, result):
+        store, _ = result
+        item = next(r for r in store.reviews.pending("venta-rota") if r["dedupe_key"].endswith("V-6"))
+        assert item["candidates"] == [
+            {"campo": "quantity", "nota": "la cantidad sin el signo", "puntaje": 0.9, "valor": 7}
+        ]
 
     def test_only_the_trustworthy_ones_reach_the_monthly_total(self, result):
         store, _ = result

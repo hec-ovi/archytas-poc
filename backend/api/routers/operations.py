@@ -160,12 +160,18 @@ def _apply_review(store: Store, item: dict, decision: dict, username: str) -> st
         return "la venta elegida vuelve a sumar y las otras quedan marcadas como duplicadas"
 
     if kind == "venta-rota" and decision.get("valor_elegido") is not None:
-        # the proposal is quantity times unit price, which the system worked out but refused
-        # to apply on its own. Accepting it is the person taking responsibility for the number.
+        # the system worked the correction out but refused to apply it on its own. Which
+        # column it belongs in travels with the candidate, so the caller only sends the value.
         corrected = int(decision["valor_elegido"])
+        candidate = next((c for c in item.get("candidates", []) if c.get("valor") == corrected), {})
+        column = candidate.get("campo", "total_cents")
         for sale in store.sales.by_code(code):
-            store.sales.update(sale["id"], {"total_cents": corrected})
-            store.sales.flag(sale["id"], "valida", f"total corregido a mano por {username}")
-        return f"la venta {code} vuelve a sumar con el total corregido"
+            values = {column: corrected}
+            if column == "quantity" and sale.get("unit_cents"):
+                values["total_cents"] = corrected * sale["unit_cents"]
+            store.sales.update(sale["id"], values)
+            store.sales.flag(sale["id"], "valida", f"corregido a mano por {username}")
+        nombre = "la cantidad" if column == "quantity" else "el total"
+        return f"la venta {code} vuelve a sumar con {nombre} corregido"
 
     return "sin cambios automaticos: queda registrado quien lo reviso"

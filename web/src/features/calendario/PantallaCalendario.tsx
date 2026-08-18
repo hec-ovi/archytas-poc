@@ -124,9 +124,9 @@ export function PantallaCalendario() {
                   onArrastrar={setArrastrado}
                   onSoltarChip={() => { setArrastrado(null); setDiaEncima(null) }}
                   onEntrar={setDiaEncima}
-                  onSoltarEnDia={(dia) => {
-                    if (arrastrado !== null) void mover(arrastrado, dia)
+                  onSoltarEnDia={(dia, id) => {
                     setArrastrado(null)
+                    void mover(id, dia)
                   }}
                 />
               )}

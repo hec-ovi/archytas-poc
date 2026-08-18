@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Armazon } from './Armazon'
 import { Guardia } from './Guardia'
@@ -5,22 +6,30 @@ import { Pagina } from './Pagina'
 import { primeraRuta } from './secciones'
 import { useSesion } from './sesion'
 import { PantallaLogin } from '../features/login/PantallaLogin'
-import { PantallaTablero } from '../features/tablero/PantallaTablero'
-import { PantallaCalendario } from '../features/calendario/PantallaCalendario'
-import { PantallaProveedores } from '../features/proveedores/PantallaProveedores'
-import { PantallaProveedor } from '../features/proveedores/PantallaProveedor'
-import { PantallaFacturas } from '../features/facturas/PantallaFacturas'
-import { PantallaOrdenes } from '../features/ordenes/PantallaOrdenes'
-import { PantallaVentas } from '../features/ventas/PantallaVentas'
-import { PantallaProductos } from '../features/productos/PantallaProductos'
-import { PantallaRevision } from '../features/revision/PantallaRevision'
-import { PantallaMensajes } from '../features/mensajes/PantallaMensajes'
-import { PantallaConfiguracion } from '../features/configuracion/PantallaConfiguracion'
+
+// each screen ships on its own, so opening the calendar does not download the charts
+const PantallaTablero = lazy(() => import('../features/tablero/PantallaTablero').then((m) => ({ default: m.PantallaTablero })))
+const PantallaCalendario = lazy(() => import('../features/calendario/PantallaCalendario').then((m) => ({ default: m.PantallaCalendario })))
+const PantallaProveedores = lazy(() => import('../features/proveedores/PantallaProveedores').then((m) => ({ default: m.PantallaProveedores })))
+const PantallaProveedor = lazy(() => import('../features/proveedores/PantallaProveedor').then((m) => ({ default: m.PantallaProveedor })))
+const PantallaFacturas = lazy(() => import('../features/facturas/PantallaFacturas').then((m) => ({ default: m.PantallaFacturas })))
+const PantallaOrdenes = lazy(() => import('../features/ordenes/PantallaOrdenes').then((m) => ({ default: m.PantallaOrdenes })))
+const PantallaVentas = lazy(() => import('../features/ventas/PantallaVentas').then((m) => ({ default: m.PantallaVentas })))
+const PantallaProductos = lazy(() => import('../features/productos/PantallaProductos').then((m) => ({ default: m.PantallaProductos })))
+const PantallaRevision = lazy(() => import('../features/revision/PantallaRevision').then((m) => ({ default: m.PantallaRevision })))
+const PantallaMensajes = lazy(() => import('../features/mensajes/PantallaMensajes').then((m) => ({ default: m.PantallaMensajes })))
+const PantallaConfiguracion = lazy(() => import('../features/configuracion/PantallaConfiguracion').then((m) => ({ default: m.PantallaConfiguracion })))
 import type { Seccion } from '../lib/types'
 import type { ReactNode } from 'react'
 
 function protegida(seccion: Seccion, pantalla: ReactNode) {
-  return <Guardia seccion={seccion}>{pantalla}</Guardia>
+  return (
+    <Guardia seccion={seccion}>
+      <Suspense fallback={<div className="cargando" style={{ paddingTop: 60 }}>Abriendo la sección</div>}>
+        {pantalla}
+      </Suspense>
+    </Guardia>
+  )
 }
 
 function Inicio() {

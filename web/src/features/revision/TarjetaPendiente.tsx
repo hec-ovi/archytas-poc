@@ -1,9 +1,9 @@
-import { fechaHora, numero, pesos } from '../../lib/format'
+import { fechaHora, numero } from '../../lib/format'
 import { Boton } from '../../ui/Boton'
 import { Chapa } from '../../ui/Chapa'
 import { DatosCrudos } from './DatosCrudos'
 import type { CandidatoRevision, PendienteRevision, VentaExcluida } from '../../lib/types'
-import { armarDecision, huellaDeFila } from './decision'
+import { armarDecision, huellaDeFila, textoCandidato } from './decision'
 
 const TIPO: Record<string, string> = {
   'venta-duplicada': 'Venta duplicada',
@@ -84,9 +84,7 @@ export function TarjetaPendiente({ pendiente, excluidas, trabajando, onResolver,
                 onClick={() => onResolver(eleccion.decision)}
                 title={sinHuella ? 'Para aplicar esta elección hace falta acceso a la sección Ventas' : undefined}
               >
-                <span className="valor">
-                  {typeof candidato.valor === 'number' ? pesos(candidato.valor) : candidato.valor}
-                </span>
+                <span className="valor">{textoCandidato(candidato)}</span>
                 <span className="confianza">
                   Confianza {numero(Math.round((candidato.puntaje ?? 0) * 100))}%
                   {candidato.nota ? ` · ${candidato.nota}` : ''}

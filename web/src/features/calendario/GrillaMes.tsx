@@ -14,7 +14,7 @@ interface Props {
   onArrastrar: (id: number) => void
   onSoltarChip: () => void
   onEntrar: (fecha: string | null) => void
-  onSoltarEnDia: (fecha: string) => void
+  onSoltarEnDia: (fecha: string, id: number) => void
 }
 
 export function GrillaMes(props: Props) {

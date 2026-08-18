@@ -85,14 +85,21 @@ export function PantallaRevision() {
     [recurso.datos, tipo],
   )
 
-  const opciones = useMemo(() => [
-    { clave: '', texto: 'Todo', cuenta: recurso.datos?.pendientes.length ?? 0 },
-    ...(recurso.datos?.resumen ?? []).map((fila) => ({
-      clave: fila.kind,
-      texto: TIPO_TEXTO[fila.kind] ?? fila.kind,
-      cuenta: fila.n,
-    })),
-  ], [recurso.datos])
+  const opciones = useMemo(() => {
+    const vivos = recurso.datos?.pendientes ?? []
+    const tipos = Array.from(new Set([
+      ...(recurso.datos?.resumen ?? []).map((fila) => fila.kind),
+      ...vivos.map((item) => item.kind),
+    ]))
+    return [
+      { clave: '', texto: 'Todo', cuenta: vivos.length },
+      ...tipos.map((kind) => ({
+        clave: kind,
+        texto: TIPO_TEXTO[kind] ?? kind,
+        cuenta: vivos.filter((item) => item.kind === kind).length,
+      })),
+    ]
+  }, [recurso.datos])
 
   return (
     <Pagina
@@ -109,13 +116,8 @@ export function PantallaRevision() {
                 pie="cada uno bloquea datos de sumar"
                 tono={datos.pendientes.length ? 'urgente' : 'calma'}
               />
-              {datos.resumen.map((fila) => (
-                <Metrica
-                  key={fila.kind}
-                  rotulo={TIPO_TEXTO[fila.kind] ?? fila.kind}
-                  valor={numero(fila.n)}
-                  pie="en la cola"
-                />
+              {opciones.filter((opcion) => opcion.clave).map((opcion) => (
+                <Metrica key={opcion.clave} rotulo={opcion.texto} valor={numero(opcion.cuenta)} pie="en la cola" />
               ))}
               <Metrica rotulo="Resueltos ahora" valor={numero(resueltos)} pie="en esta sesión" tono="calma" />
             </div>

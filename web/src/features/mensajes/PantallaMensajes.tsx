@@ -10,6 +10,7 @@ import { Panel } from '../../ui/Panel'
 import { Metrica } from '../../ui/Metrica'
 import { Campo } from '../../ui/Campo'
 import { Bloque, Vacio } from '../../ui/Estado'
+import { ModalFactura } from '../facturas/ModalFactura'
 import { FilaMensaje } from './FilaMensaje'
 import './mensajes.css'
 
@@ -26,6 +27,7 @@ export function PantallaMensajes() {
   const [tipo, setTipo] = useState('')
   const [trabajando, setTrabajando] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [factura, setFactura] = useState<number | null>(null)
 
   useEventoVivo('sincronizacion-lista', () => recurso.recargar())
 
@@ -112,6 +114,7 @@ export function PantallaMensajes() {
                       mensaje={mensaje}
                       trabajando={trabajando === mensaje.id}
                       onResolver={() => void resolver(mensaje.id)}
+                      onAbrirFactura={setFactura}
                     />
                   ))}
                 </ul>
@@ -120,6 +123,8 @@ export function PantallaMensajes() {
           </div>
         )}
       </Bloque>
+
+      {factura === null ? null : <ModalFactura id={factura} onCerrar={() => setFactura(null)} />}
     </Pagina>
   )
 }
