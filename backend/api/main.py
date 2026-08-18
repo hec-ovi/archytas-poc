@@ -16,7 +16,7 @@ from store import Store
 
 from .config import Settings
 from .realtime import Hub
-from .routers import analytics, auth, calendar, dashboard, invoices, operations, suppliers, sync
+from .routers import analytics, auth, calendar, dashboard, documents, invoices, operations, suppliers, sync
 from .security import SessionSigner
 
 
@@ -48,7 +48,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    for module in (auth, dashboard, suppliers, invoices, calendar, operations, analytics, sync):
+    for module in (auth, dashboard, suppliers, invoices, calendar, operations, analytics, sync, documents):
         app.include_router(module.router)
 
     @app.get("/api/salud", tags=["salud"])
