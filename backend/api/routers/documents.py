@@ -19,6 +19,7 @@ from datetime import date
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 
 from document_parser import DocumentParser
+from document_parser.errors import DocumentParserError
 from ingest.resolvers import SupplierResolver
 from store import Store, content_hash
 
@@ -61,7 +62,26 @@ async def upload(archivo: UploadFile = File(...), store: Store = Depends(get_sto
     stored_path = inbox / f"{digest[:16]}-{archivo.filename}"
     stored_path.write_bytes(content)
 
-    result = DocumentParser().parse(stored_path)
+    try:
+        result = DocumentParser().parse(stored_path)
+    except DocumentParserError as error:
+        # someone will drag in a .doc, a photo from a phone, a zip. That is not a crash, it
+        # is an answer: we say what we cannot read and the file stays on record.
+        document_id = store.documents.save(
+            {
+                "kind": "desconocido",
+                "filename": archivo.filename or stored_path.name,
+                "mime": archivo.content_type or "",
+                "stored_path": str(stored_path),
+                "content_hash": digest,
+                "parsed": {"propuesta": {"falta": ["todo"], "motivo": str(error)}},
+                "parser": "",
+                "status": "fallido",
+                "uploaded_by": user["usuario"],
+            }
+        )
+        return {"documento": store.documents.get(document_id), "nuevo": True, "aviso": str(error)}
+
     proposal = _proposal(store, result)
     # a field read at low confidence is still a field: it can be applied, but a person should
     # see it first. That is different from a field that is missing, which blocks the load.
@@ -93,6 +113,9 @@ async def apply(document_id: int, store: Store = Depends(get_store), hub: Hub = 
         return {"factura_id": document["invoice_id"], "nuevo": False}
 
     proposal = document.get("parsed", {}).get("propuesta", {})
+    if document.get("status") == "fallido":
+        raise HTTPException(status.HTTP_409_CONFLICT,
+                            proposal.get("motivo") or "No se pudo leer el archivo")
     if proposal.get("falta"):
         raise HTTPException(
             status.HTTP_409_CONFLICT,

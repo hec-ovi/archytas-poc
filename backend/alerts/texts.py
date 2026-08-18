@@ -4,13 +4,15 @@ Keeping the text out of the code is what lets someone rewrite an alert without t
 Python, and what keeps the WhatsApp wording (which Meta reviews) readable in one place.
 
 File shape: the first line is the title, everything after it is the body. Both can carry
-named placeholders like `{numero}`, filled by the rule.
+named placeholders like `{numero}`, filled by the rule. A rule that can produce many events
+at once also has a `<regla>_resumen.md`, which is what goes out instead of the pile.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from string import Formatter
 from typing import Mapping
 
 from .errors import MissingText
@@ -36,6 +38,12 @@ class TextLibrary:
     def render(self, name: str, params: Mapping[str, str]) -> AlertText:
         title, body = self._load(name)
         return AlertText(title=self._fill(title, params, name), body=self._fill(body, params, name))
+
+    def fields(self, name: str) -> tuple[str, ...]:
+        """The placeholders the file uses, so nothing extra travels to Meta as a parameter."""
+        title, body = self._load(name)
+        parsed = Formatter().parse(f"{title}\n{body}")
+        return tuple(dict.fromkeys(field for _, field, _, _ in parsed if field))
 
     def _load(self, name: str) -> tuple[str, str]:
         if name not in self._cache:

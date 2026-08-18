@@ -516,3 +516,19 @@ table.tabla tfoot td {
   font-weight: 600;
   margin-bottom: 2px;
 }
+
+.filtros .campo.crecer {
+  flex: 1 1 220px;
+}
+
+.lista-simple {
+  display: grid;
+  gap: 1px;
+  background: var(--linea-suave);
+  border-top: 1px solid var(--linea-suave);
+}
+
+.lista-simple > li {
+  background: var(--panel);
+  padding: 8px 12px;
+}

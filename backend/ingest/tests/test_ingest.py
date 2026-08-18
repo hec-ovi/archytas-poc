@@ -6,10 +6,19 @@ loaded twice with different quantities, a sale whose total does not add up, and 
 impossible date.
 """
 
+from datetime import date, timedelta
+
 import pytest
 
 from ingest import IngestRunner
 from store import Store
+
+# dates move with the clock so the tests never expire: F-1 is already overdue, F-2 is still
+# ahead, which is what any real set of invoices looks like
+TODAY = date.today()
+PAST_DUE = (TODAY - timedelta(days=60)).isoformat()
+UPCOMING = (TODAY + timedelta(days=20)).isoformat()
+ISSUED = (TODAY - timedelta(days=105)).isoformat()
 
 CUENTAS = [
     {"proveedor": "Aceros Belgrano SA", "slug": "aceros-belgrano-sa", "cuit": "30-70918273-4",
@@ -30,12 +39,12 @@ PRECIOS = [
 ]
 
 FACTURAS = [
-    {"id": "f1", "proveedor": "Aceros Belgrano SA", "numero": "F-1", "fecha": "2026-01-01",
-     "monto": "$100.000", "tipo": "PDF", "vencimiento": "2026-02-15", "reciboGenerado": True,
+    {"id": "f1", "proveedor": "Aceros Belgrano SA", "numero": "F-1", "fecha": ISSUED,
+     "monto": "$100.000", "tipo": "PDF", "vencimiento": PAST_DUE, "reciboGenerado": True,
      "productoId": "p1", "productoTexto": "", "pagado": "$0", "saldo": "$100.000",
      "estadoPago": "Impaga", "diasVencida": 99},
-    {"id": "f2", "proveedor": "ACEROS BELGRANO", "numero": "F-2", "fecha": "2026-02-01",
-     "monto": "$50.000", "tipo": "Excel", "vencimiento": "2026-03-18", "reciboGenerado": False,
+    {"id": "f2", "proveedor": "ACEROS BELGRANO", "numero": "F-2", "fecha": ISSUED,
+     "monto": "$50.000", "tipo": "Excel", "vencimiento": UPCOMING, "reciboGenerado": False,
      "productoId": "p2", "productoTexto": "", "pagado": "$0", "saldo": "$50.000",
      "estadoPago": "Impaga", "diasVencida": 0},
 ]
@@ -143,7 +152,7 @@ class TestInvoices:
 
     def test_every_due_date_lands_on_the_calendar(self, result):
         store, _ = result
-        assert len(store.calendar.between("2026-01-01", "2026-12-31")) == 2
+        assert len(store.calendar.between("2000-01-01", "2099-12-31")) == 2
 
 
 class TestSales:

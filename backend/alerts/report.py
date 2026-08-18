@@ -16,6 +16,8 @@ class AlertRun:
     delivered: int = 0
     failed: int = 0
     retried: int = 0
+    digests: int = 0
+    grouped: int = 0
     errors: list[str] = field(default_factory=list)
 
     def as_dict(self) -> dict[str, Any]:
@@ -26,5 +28,7 @@ class AlertRun:
             "entregas": self.delivered,
             "entregas_fallidas": self.failed,
             "reintentos": self.retried,
+            "resumenes": self.digests,
+            "eventos_agrupados": self.grouped,
             "errores": self.errors,
         }

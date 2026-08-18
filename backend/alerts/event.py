@@ -1,7 +1,9 @@
 """One thing worth interrupting a person for.
 
 The event is what the rule decided; sending it is somebody else's job. It carries its own
-dedupe key, which is what stops the same due date from being announced every twelve hours.
+dedupe key, which is what stops the same due date from being announced every twelve hours,
+plus the two numbers a digest needs when a rule finds more of them than anyone can read:
+what it is worth, and how bad it is next to its siblings.
 """
 
 from __future__ import annotations
@@ -29,6 +31,8 @@ class AlertEvent:
     due_on: str | None = None
     params: Mapping[str, str] = field(default_factory=dict)
     template: str = ""
+    amount_cents: int = 0
+    rank: int = 0
 
     def as_row(self) -> dict[str, Any]:
         return {
@@ -40,7 +44,12 @@ class AlertEvent:
             "entity_kind": self.entity_kind,
             "entity_id": self.entity_id,
             "due_on": self.due_on,
-            "extra": {"parametros": dict(self.params), "plantilla": self.template},
+            "extra": {
+                "parametros": dict(self.params),
+                "plantilla": self.template,
+                "monto_centavos": self.amount_cents,
+                "orden": self.rank,
+            },
         }
 
     def as_message(self) -> Message:
@@ -63,4 +72,6 @@ class AlertEvent:
             due_on=row.get("due_on"),
             params=extra.get("parametros", {}),
             template=extra.get("plantilla", ""),
+            amount_cents=int(extra.get("monto_centavos") or 0),
+            rank=int(extra.get("orden") or 0),
         )

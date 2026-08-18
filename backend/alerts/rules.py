@@ -4,6 +4,10 @@ The client already had an inbox full of warnings and read none of them. So a rul
 place only if missing it costs money or repeats work: the receipt that can no longer be
 issued, the invoice already overdue, the big one about to fall, the order that gets placed
 twice, the claim nobody answered, and the data waiting for a person to confirm it.
+
+Each rule also says how much each event is worth and how bad it is against its siblings.
+That is what lets the engine send one digest, named after the worst case, when the real
+database turns out to hold seventy of them.
 """
 
 from __future__ import annotations
@@ -26,6 +30,7 @@ class MissingReceiptRule(Rule):
     name = "recibo_faltante"
     severity = URGENTE
     text = "recibo_faltante"
+    digest_text = "recibo_faltante_resumen"
     entity_kind = "factura"
 
     def evaluate(self, store: Store, settings: AlertSettings) -> list[AlertEvent]:
@@ -40,6 +45,8 @@ class MissingReceiptRule(Rule):
                     key=f"{invoice['id']}:{due_on}",
                     entity_id=invoice["id"],
                     due_on=due_on,
+                    amount_cents=invoice["amount_cents"],
+                    rank=-(clock.days_until(due_on) or 0),  # the nearest deadline leads the digest
                     params={
                         "numero": invoice["number"],
                         "proveedor": self.words(invoice.get("supplier_name"), NO_SUPPLIER),
@@ -58,6 +65,7 @@ class OverdueInvoiceRule(Rule):
     name = "factura_vencida"
     severity = URGENTE
     text = "factura_vencida"
+    digest_text = "factura_vencida_resumen"
     entity_kind = "factura"
 
     def evaluate(self, store: Store, settings: AlertSettings) -> list[AlertEvent]:
@@ -67,18 +75,21 @@ class OverdueInvoiceRule(Rule):
             due_on = invoice["due_on"]
             if not due_on or due_on >= clock.today or invoice["balance_cents"] <= 0:
                 continue
+            overdue_days = clock.days_since(due_on) or 0
             events.append(
                 self._event(
                     key=f"{invoice['id']}:{due_on}",
                     entity_id=invoice["id"],
                     due_on=due_on,
+                    amount_cents=invoice["balance_cents"],
+                    rank=overdue_days,  # the oldest debt leads the digest
                     params={
                         "numero": invoice["number"],
                         "proveedor": self.words(invoice.get("supplier_name"), NO_SUPPLIER),
                         "monto": self.money(invoice["amount_cents"]),
                         "saldo": self.money(invoice["balance_cents"]),
                         "vencimiento": clock.pretty(due_on),
-                        "dias": str(clock.days_since(due_on)),
+                        "dias": str(overdue_days),
                     },
                 )
             )
@@ -91,6 +102,7 @@ class LargeInvoiceDueRule(Rule):
     name = "factura_por_vencer"
     severity = AVISO
     text = "factura_por_vencer"
+    digest_text = "factura_por_vencer_resumen"
     entity_kind = "factura"
 
     def evaluate(self, store: Store, settings: AlertSettings) -> list[AlertEvent]:
@@ -106,6 +118,8 @@ class LargeInvoiceDueRule(Rule):
                     key=f"{invoice['id']}:{due_on}",
                     entity_id=invoice["id"],
                     due_on=due_on,
+                    amount_cents=invoice["balance_cents"],
+                    rank=invoice["amount_cents"],  # the biggest one leads the digest
                     params={
                         "numero": invoice["number"],
                         "proveedor": self.words(invoice.get("supplier_name"), NO_SUPPLIER),
@@ -125,6 +139,7 @@ class StaleOrderRule(Rule):
     name = "orden_vieja"
     severity = AVISO
     text = "orden_vieja"
+    digest_text = "orden_vieja_resumen"
     entity_kind = "orden"
 
     def evaluate(self, store: Store, settings: AlertSettings) -> list[AlertEvent]:
@@ -140,6 +155,8 @@ class StaleOrderRule(Rule):
                 self._event(
                     key=f"{order['id']}:{order['ordered_on']}",
                     entity_id=order["id"],
+                    amount_cents=int(order.get("estimated_cents") or 0),
+                    rank=age,  # the oldest order leads the digest
                     params={
                         "numero": order["number"],
                         "proveedor": self.words(order.get("supplier_name"), NO_SUPPLIER),
@@ -159,6 +176,7 @@ class OpenClaimRule(Rule):
     name = "reclamo_sin_responder"
     severity = AVISO
     text = "reclamo_sin_responder"
+    digest_text = "reclamo_sin_responder_resumen"
     entity_kind = "mensaje"
 
     def evaluate(self, store: Store, settings: AlertSettings) -> list[AlertEvent]:
@@ -171,6 +189,7 @@ class OpenClaimRule(Rule):
                 self._event(
                     key=str(message["id"]),
                     entity_id=message["id"],
+                    rank=clock.days_since(message.get("received_on")) or 0,  # the oldest leads
                     params={
                         "proveedor": self.words(
                             message.get("supplier_name") or message.get("sender"), NO_SUPPLIER

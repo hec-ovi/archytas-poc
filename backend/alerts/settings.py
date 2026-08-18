@@ -24,6 +24,7 @@ class AlertSettings:
     aviso_dias_antes: int = 7
     aviso_monto_minimo: int = 10_000_000
     orden_vieja_dias: int = 30
+    aviso_maximo_por_regla: int = 5
 
     @classmethod
     def load(cls, store: Store, today: str | date | None = None) -> "AlertSettings":
@@ -35,6 +36,9 @@ class AlertSettings:
             aviso_dias_antes=_whole(read("aviso_dias_antes"), defaults.aviso_dias_antes),
             aviso_monto_minimo=_whole(read("aviso_monto_minimo"), defaults.aviso_monto_minimo),
             orden_vieja_dias=_whole(read("orden_vieja_dias"), defaults.orden_vieja_dias),
+            aviso_maximo_por_regla=_whole(
+                read("aviso_maximo_por_regla"), defaults.aviso_maximo_por_regla
+            ),
         )
 
     @property
