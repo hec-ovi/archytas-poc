@@ -7,3 +7,6 @@ Filtra por estado de pago: `impaga` si no tiene ningun pago, `parcial` si esta p
 
 ## proveedor
 Filtra por proveedor, con el nombre como lo escribio la persona.
+
+## solo_vencidas
+En verdadero deja solo las que ya pasaron su vencimiento y todavia deben plata.

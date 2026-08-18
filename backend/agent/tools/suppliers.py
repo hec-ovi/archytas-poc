@@ -1,4 +1,4 @@
-"""What we owe: one supplier, or all of them.
+"""What we owe each supplier, and whether the agreed terms are being honoured.
 
 The balance is never calculated here. It comes from the `supplier_position` view, which is
 the invoices minus the payments actually recorded.
@@ -40,3 +40,27 @@ class ConsultarDeudas(Tool):
         positions = [supplier_view(row) for row in self._store.suppliers.positions()]
         total = sum(row["deuda_centavos"] for row in positions)
         return {"proveedores": positions, **money(total, "deuda_total")}
+
+
+class ConsultarCumplimientoPlazos(Tool):
+    """Are we paying on the terms we agreed, or later?
+
+    The comparison is between the term written down with the supplier and the due date the
+    invoices actually carry. It is a query, not a judgement call.
+    """
+
+    name = "consultar_cumplimiento_plazos"
+    section = "proveedores"
+
+    def run(self, **_: Any) -> dict[str, Any]:
+        rows = [
+            {
+                "proveedor": row["name"],
+                "plazo_pactado_dias": row["terms_days"],
+                "facturas": row["invoice_count"],
+                "facturas_en_plazo": row["on_terms_count"],
+                "facturas_fuera_de_plazo": (row["invoice_count"] or 0) - (row["on_terms_count"] or 0),
+            }
+            for row in self._store.suppliers.with_terms_compliance()
+        ]
+        return {"proveedores": rows}
