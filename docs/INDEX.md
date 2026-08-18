@@ -17,7 +17,7 @@ contrato: nadie lee el codigo de otra caja.
 | `ingest` | Orquesta: trae del portal, normaliza, guarda idempotente. Tambien procesa archivos subidos. | `portal_sync`, `normalizer`, `store`, `document_parser` |
 | `agent` | LLM via OpenRouter con herramientas: cargar, consultar y actualizar documentos. Entra donde hace falta criterio. | `store`, `normalizer`, `document_parser` |
 | `alerts` | Reglas de evento (vence pronto, impaga, sin recibo, reclamo sin responder) y su programacion. | `store`, `notify` |
-| `notify` | Entrega de mensajes por canal. WhatsApp y bandeja local. | - |
+| `notify` | Entrega de mensajes por canal: WhatsApp, Telegram y bandeja local. Sin credenciales cae en la bandeja. | - |
 | `api` | HTTP y WebSocket. Usuarios, roles, y toda la superficie que consume la UI. | `store`, `ingest`, `agent`, `alerts`, `notify` |
 
 ## Frontend (`web/`)

@@ -133,10 +133,11 @@ class ReceiptRepository(Repository):
     def save(self, values: dict[str, Any]) -> int:
         return self.upsert(values, ["number"])
 
-    def next_number(self) -> str:
-        """Receipt numbers continue the portal's own series so nobody has two numberings."""
-        last = self.db.scalar(
-            "SELECT number FROM receipt WHERE number LIKE 'REC-%' ORDER BY CAST(substr(number, 5) AS INTEGER) DESC LIMIT 1"
-        )
-        start = int(last.split("-")[1]) if last else 1650
-        return f"REC-{start + 1}"
+    @staticmethod
+    def number_for(invoice_number: str) -> str:
+        """A receipt is named after the invoice it acknowledges.
+
+        Derived instead of sequential so the same invoice always produces the same receipt
+        number, whether it came from a sync or from someone pressing the button.
+        """
+        return f"REC-{invoice_number}"

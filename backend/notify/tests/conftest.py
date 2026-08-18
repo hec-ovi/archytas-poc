@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -27,8 +28,6 @@ class FakeApi:
         return httpx.Response(self._status, json=self._payload)
 
     def sent(self) -> dict:
-        import json
-
         return json.loads(self.requests[-1].content)
 
 

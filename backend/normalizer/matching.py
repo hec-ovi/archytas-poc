@@ -117,7 +117,9 @@ def build_catalog(values: list[str], threshold: float = STRONG) -> CatalogMatche
 
     matcher = CatalogMatcher()
     for group in groups:
-        canonical = max(group, key=lambda v: (len(tokens_of(v)), len(v)))
+        # the fullest spelling wins, and between equals the one that is not shouting: the
+        # client reads these on screen, and "Electricidad" reads better than "ELECTRICIDAD"
+        canonical = max(group, key=lambda v: (len(tokens_of(v)), len(v), not v.isupper()))
         matcher.add(CatalogEntry(key=slugify(canonical), name=canonical, aliases=tuple(g for g in group if g != canonical)))
     return matcher
 

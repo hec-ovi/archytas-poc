@@ -12,10 +12,10 @@ from pathlib import Path
 from typing import Mapping
 
 from .errors import UnknownChannel
+from .whatsapp import DEFAULT_API_VERSION
 
 KNOWN_CHANNELS = ("whatsapp", "telegram", "outbox")
 DEFAULT_DATA_DIR = "data"
-DEFAULT_API_VERSION = "v25.0"
 
 
 def _split(raw: str) -> tuple[str, ...]:

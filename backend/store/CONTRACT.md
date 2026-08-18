@@ -49,7 +49,7 @@ store.invoices.listing(state="parcial")     # las que estan pagas a medias
 | `prices` | `record`, `for_product`, `average_by_month` |
 | `invoices` | `save`, `listing`, `balance`, `due_between`, `payment_summary`, `without_receipt_due_before` |
 | `payments` | `save`, `for_invoice`, `for_supplier` |
-| `receipts` | `save`, `for_invoice`, `next_number` |
+| `receipts` | `save`, `for_invoice`, `number_for(numero_factura)` |
 | `orders` | `save`, `listing`, `stale`, `by_state` |
 | `sales` | `save`, `flag`, `by_code`, `excluded`, `revenue_by_month`, `revenue_by_category`, `top_products`, `top_customers`, `health` |
 | `messages` | `save`, `listing`, `resolve`, `open_count`, `by_kind` |
