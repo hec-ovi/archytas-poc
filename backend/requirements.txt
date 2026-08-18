@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+httpx
+pydantic
+pydantic-settings
+python-multipart
+apscheduler
+openpyxl
+pdfplumber
+pypdf
+pillow
+pytesseract
+argon2-cffi
+pyjwt
