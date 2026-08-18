@@ -141,7 +141,8 @@ CREATE TABLE IF NOT EXISTS invoice (
     issued_on     TEXT,
     due_on        TEXT,
     amount_cents  INTEGER NOT NULL DEFAULT 0,
-    paid_cents    INTEGER NOT NULL DEFAULT 0,
+    -- lo pagado no se guarda: sale de sumar la tabla payment en la vista invoice_balance.
+    -- Una copia guardada se despega de los pagos que tiene debajo.
     source_kind   TEXT NOT NULL DEFAULT 'portal',   -- portal | pdf | pdf-escaneado | excel | manual
     source_file   TEXT,
     status        TEXT NOT NULL DEFAULT 'vigente',  -- vigente | en-revision | anulada
