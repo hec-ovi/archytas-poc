@@ -6,7 +6,7 @@ live together because splitting them into four files would be four files of thir
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel
 
 from store import Store
@@ -106,6 +106,15 @@ def alerts(store: Store = Depends(get_store), user: dict = Depends(current_user)
         "sin_ver": store.alerts.unacknowledged(),
         "entregas_fallidas": store.deliveries.failed(),
     }
+
+
+@router.post("/alertas/revisar")
+async def check_now(request: Request, store: Store = Depends(get_store), hub: Hub = Depends(get_hub),
+                    user: dict = Depends(requires("configuracion"))) -> dict:
+    """The "check now" button: run the rules against the current state and deliver what is new."""
+    report = request.app.state.alerts.run()
+    await hub.broadcast("avisos-revisados", report.as_dict())
+    return {"resumen": report.as_dict(), "recientes": store.alerts.recent(20)}
 
 
 @router.post("/alertas/{event_id}/visto")

@@ -14,7 +14,7 @@ from ..errors import ToolError
 from ..library import PromptLibrary
 from .base import Parameter, Tool
 from .lookup import SupplierLookup
-from .presenters import supplier_view
+from .presenters import money, supplier_view
 
 
 class ConsultarProveedor(Tool):
@@ -39,9 +39,4 @@ class ConsultarDeudas(Tool):
     def run(self, **_: Any) -> dict[str, Any]:
         positions = [supplier_view(row) for row in self._store.suppliers.positions()]
         total = sum(row["deuda_centavos"] for row in positions)
-        return {"proveedores": positions, **_total(total)}
-
-
-def _total(cents: int) -> dict[str, Any]:
-    from .presenters import money
-    return money(cents, "deuda_total")
+        return {"proveedores": positions, **money(total, "deuda_total")}

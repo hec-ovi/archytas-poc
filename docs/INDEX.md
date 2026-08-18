@@ -16,7 +16,7 @@ contrato: nadie lee el codigo de otra caja.
 | `document_parser` | Archivo (PDF texto, PDF escaneado, Excel desprolijo) a campos de factura. OCR y extraccion asistida cuando el texto no alcanza. | `normalizer` |
 | `ingest` | Orquesta: trae del portal, normaliza, guarda idempotente. Tambien procesa archivos subidos. | `portal_sync`, `normalizer`, `store`, `document_parser` |
 | `agent` | LLM via OpenRouter con herramientas: cargar, consultar y actualizar documentos. Entra donde hace falta criterio. | `store`, `normalizer`, `document_parser` |
-| `alerts` | Reglas de evento (vence pronto, impaga, sin recibo, reclamo sin responder) y su programacion. | `store`, `notify` |
+| `alerts` | Reglas de evento (vence pronto, impaga, sin recibo, orden olvidada, reclamo sin responder) y su programacion. | `store`, `notify`, `normalizer` |
 | `notify` | Entrega de mensajes por canal: WhatsApp, Telegram y bandeja local. Sin credenciales cae en la bandeja. | - |
 | `api` | HTTP y WebSocket. Usuarios, roles, y toda la superficie que consume la UI. | `store`, `ingest`, `agent`, `alerts`, `notify` |
 

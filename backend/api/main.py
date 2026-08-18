@@ -12,6 +12,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
+from alerts import AlertEngine, AlertScheduler
+from notify import Notifier
 from store import Store
 
 from .config import Settings
@@ -27,7 +29,18 @@ async def lifespan(app: FastAPI):
     app.state.store = Store.open(str(settings.database_path))
     app.state.hub = Hub()
     app.state.signer = SessionSigner(settings.secret_key)
+
+    # alerts run on their own clock: the client asked to change how often without calling
+    # anyone, so the interval is a setting the scheduler re-reads, not a constant
+    app.state.notifier = Notifier.from_env()
+    app.state.alerts = AlertEngine(app.state.store, app.state.notifier)
+    app.state.scheduler = AlertScheduler(app.state.alerts, app.state.store)
+    app.state.scheduler.start()
+
     yield
+
+    app.state.scheduler.stop()
+    app.state.notifier.close()
     app.state.store.close()
 
 
@@ -60,6 +73,7 @@ def create_app() -> FastAPI:
             "facturas": store.invoices.count(),
             "ventas": store.sales.count(),
             "paginas_abiertas": app.state.hub.connected,
+            "canales_de_aviso": list(app.state.notifier.channels),
         }
 
     @app.websocket("/ws")
