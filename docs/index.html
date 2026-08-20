@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cordillera · el sistema y la capa de IA que viene arriba</title>
-<meta name="description" content="Un portal viejo de solo lectura convertido en un sistema que lee papeles, ordena datos, contesta preguntas y avisa. Con la capa de IA que sigue: OCR, WhatsApp con permisos por numero y CAG en lugar de RAG.">
+<title>Cordillera · facturación e inventario asistidos por IA</title>
+<meta name="description" content="Caso de estudio: actualizacion de un sistema de facturacion e inventario a una operacion asistida por inteligencia artificial. OCR de documentos, avisos por WhatsApp o Telegram, consolidacion de datos repetidos y un agente con herramientas sobre la base.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -72,11 +72,16 @@ a:hover{border-bottom-color:var(--acento)}
 }
 h1{
   font-family:var(--display);font-weight:700;
-  font-size:clamp(34px,5.4vw,60px);line-height:1.04;letter-spacing:-.02em;
-  max-width:19ch;
+  font-size:clamp(28px,3.9vw,46px);line-height:1.1;letter-spacing:-.02em;
+  max-width:27ch;
 }
-h1 em{font-style:normal;color:var(--acento)}
-.entrada{margin-top:24px;font-size:clamp(17px,2vw,20px);color:var(--tinta-media);max-width:62ch}
+.marco{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:var(--linea);border:1px solid var(--linea);margin-top:40px;
+}
+.parte{background:var(--panel);padding:24px;min-width:0}
+.parte p{color:var(--tinta-media);font-size:16px}
+@media(max-width:760px){.marco{grid-template-columns:1fr}}
 .cifras{
   display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
   background:var(--linea);border:1px solid var(--linea);margin-top:48px;
@@ -108,7 +113,7 @@ p+p{margin-top:12px}
 .r4{grid-template-columns:repeat(4,1fr)}
 .celda{background:var(--panel);padding:24px;min-width:0}
 .celda p{font-size:15px;color:var(--tinta-media)}
-.celda .paso{font-family:var(--mono);font-size:11px;color:var(--acento);letter-spacing:.14em;margin-bottom:12px}
+.paso{font-family:var(--mono);font-size:11px;color:var(--acento);letter-spacing:.14em;margin-bottom:12px}
 @media(max-width:900px){.r3,.r4{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.r2,.r3,.r4{grid-template-columns:1fr}}
 
@@ -195,14 +200,23 @@ footer .env p{max-width:60ch}
 
 <header class="portada">
   <div class="env">
-    <div class="ojo">De un portal de solo lectura a un sistema que contesta</div>
-    <h1>Los papeles entran como vengan. Sale <em>un número que se puede auditar</em>.</h1>
-    <p class="entrada">
-      El cliente tenía un portal viejo del que solo se podía mirar, y facturas que llegaban como
-      foto, como PDF o como Excel a las apuradas. Hoy todo eso está leído, unificado y en una
-      sola pantalla. Lo que sigue es la capa de IA: hablarle desde WhatsApp, con permisos por
-      número, y un agente que nunca inventa un número porque no sabe calcular.
-    </p>
+    <div class="ojo">Caso de estudio</div>
+    <h1>Actualización de un sistema de facturación e inventario a una operación asistida por inteligencia artificial</h1>
+    <div class="marco">
+      <div class="parte">
+        <div class="paso">SITUACIÓN</div>
+        <p>Un portal viejo, de solo lectura, con veinte años de datos adentro. Los vencimientos,
+        los reclamos de proveedores y las órdenes que quedaron abiertas no avisan: hay que
+        acordarse de ir a buscarlos. Y los mismos proveedores, rubros y artículos llegan escritos
+        de varias formas distintas, así que ningún total cierra del todo.</p>
+      </div>
+      <div class="parte">
+        <div class="paso">PROPUESTA</div>
+        <p>Un sistema que lee los documentos con OCR, venga foto, PDF o planilla; avisa por
+        WhatsApp o Telegram en el momento en que una regla se dispara; y consolida solo los datos
+        repetidos, dejando a la vista, y sin sumar, lo que no puede resolver por su cuenta.</p>
+      </div>
+    </div>
     <div class="cifras">
       <div class="cifra"><b>100</b><span>facturas cargadas: 46 son fotos escaneadas y las lee el OCR</span></div>
       <div class="cifra"><b>8</b><span>proveedores reales detrás de 24 formas distintas de escribirlos</span></div>
@@ -336,13 +350,13 @@ footer .env p{max-width:60ch}
   <div class="env">
     <div class="cabeza">
       <span class="num">02</span>
-      <h2>Los papeles entran como vengan</h2>
+      <h2>Lectura de documentos: imagen, PDF o texto</h2>
       <span class="chapa anda">andando</span>
     </div>
     <p class="bajada">
-      Imagen, PDF o texto. El tipo de archivo se decide leyendo los bytes, no la extensión, así que
-      un PDF que en realidad es una foto se detecta solo y va al OCR. De las 100 facturas cargadas,
-      <b>46 son fotos escaneadas</b>: no era un caso raro que se pudiera dejar afuera.
+      El tipo de archivo se decide leyendo los bytes, no la extensión, así que un PDF que en
+      realidad es una foto se detecta solo y va al OCR. De las 100 facturas cargadas del portal,
+      <b>46 son fotos escaneadas</b>, 29 son planillas y 25 son PDF con texto.
     </p>
 
     <div class="rejilla r2" style="margin-bottom:32px">
@@ -398,7 +412,7 @@ footer .env p{max-width:60ch}
   <div class="env">
     <div class="cabeza">
       <span class="num">03</span>
-      <h2>El agente, y por qué se le puede creer</h2>
+      <h2>El agente y el rastro de lo que hizo</h2>
       <span class="chapa anda">andando</span>
     </div>
     <p class="bajada">
@@ -532,7 +546,7 @@ consultar_ventas, consultar_productos</div>
       </div>
       <div class="celda">
         <div class="paso">POR QUÉ ATAR EL PERMISO AL NÚMERO</div>
-        <h3>El teléfono ya es la identidad</h3>
+        <h3>El teléfono como identidad</h3>
         <p>En una ferretería nadie quiere un usuario y una clave más. El teléfono ya está en el
         bolsillo, ya está probado por el propio WhatsApp, y ya se sabe de quién es.</p>
         <p>Atar el rol al número convierte esa identidad que ya existe en un permiso concreto: el
@@ -557,10 +571,10 @@ consultar_ventas, consultar_productos</div>
       <span class="chapa anda">andando</span>
     </div>
     <p class="bajada">
-      Preguntarle a la base, no buscar en una pila de fotocopias. RAG parte los documentos en
-      pedazos, los guarda en un índice y le acerca al modelo los que se parecen a la pregunta.
-      Para prosa funciona. Para una ferretería es el método equivocado: acá la pregunta es
-      "cuánto le debo", y eso es una suma con corte, no un párrafo parecido.
+      RAG parte los documentos en pedazos, los guarda en un índice y le acerca al modelo los que
+      se parecen a la pregunta. Para prosa funciona bien. Para una ferretería el problema es otro:
+      acá la pregunta es "cuánto le debo", y eso se resuelve con una suma con corte sobre datos
+      estructurados. Por eso el modelo consulta la base en lugar de leer textos parecidos.
     </p>
 
     <div class="rejilla r2" style="margin-bottom:32px">
@@ -665,7 +679,7 @@ consultar_ventas, consultar_productos</div>
   <div class="env">
     <div class="cabeza">
       <span class="num">07</span>
-      <h2>Avisa antes, y a quien corresponde</h2>
+      <h2>Avisos, y quién los recibe</h2>
       <span class="chapa anda">andando</span>
     </div>
     <p class="bajada">
@@ -714,7 +728,7 @@ consultar_ventas, consultar_productos</div>
       <span class="chapa anda">andando</span>
     </div>
     <p class="bajada">
-      Capturas del sistema corriendo con los datos reales del portal. Sin maquetas.
+      Capturas del sistema corriendo con los datos reales del portal.
     </p>
 
     <div class="galeria">
@@ -759,10 +773,10 @@ consultar_ventas, consultar_productos</div>
   <div class="env">
     <div class="cabeza">
       <span class="num">09</span>
-      <h2>Los límites, dichos de frente</h2>
+      <h2>Límites y costo real</h2>
     </div>
     <p class="bajada">
-      Un proyecto así se vende mal si no se dice dónde está el trabajo caro. Está acá.
+      Dónde está el trabajo caro de una migración así, y qué falta construir.
     </p>
 
     <div class="rejilla r2" style="margin-bottom:24px">
