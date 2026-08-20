@@ -121,17 +121,16 @@ p+p{margin-top:12px}
 .lienzo{border:1px solid var(--linea);background:var(--fondo-2);overflow-x:auto;padding:8px}
 .lienzo svg{display:block;min-width:900px;width:100%;height:auto}
 .d-caja{fill:var(--panel);stroke:var(--linea-fuerte);stroke-width:1}
-.d-caja-fuerte{fill:var(--acento-fondo);stroke:var(--acento);stroke-width:1}
+.d-datos{fill:var(--acento-fondo);stroke:var(--acento);stroke-width:1}
+.d-gente{fill:var(--ambar-fondo);stroke:var(--ambar);stroke-width:1}
+.d-ref{font-family:'Inter',sans-serif;font-size:11px;fill:var(--tinta-media)}
 .d-columna{fill:none;stroke:var(--linea);stroke-width:1;stroke-dasharray:3 4}
 .d-titulo{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;fill:var(--tinta)}
 .d-sub{font-family:'Inter',sans-serif;font-size:11px;fill:var(--tinta-media)}
 .d-etapa{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;fill:var(--tinta-suave)}
 .d-nota{font-family:'Inter',sans-serif;font-size:11px;fill:var(--tinta-suave);font-style:italic}
-.d-flecha{fill:none;stroke:var(--linea-fuerte);stroke-width:1.4}
-.d-flecha-viva{fill:none;stroke:var(--acento);stroke-width:1.4}
-.d-flecha-corte{fill:none;stroke:var(--ambar);stroke-width:1.4;stroke-dasharray:4 4}
-.d-acento{fill:var(--acento)}
-.d-ambar{fill:var(--ambar)}
+.d-flecha-datos{fill:none;stroke:var(--acento);stroke-width:1.4}
+.d-flecha-gente{fill:none;stroke:var(--ambar);stroke-width:1.4}
 
 /* ---------- datos y consola ---------- */
 .consola{
@@ -206,22 +205,23 @@ footer .env p{max-width:60ch}
       <div class="parte">
         <div class="paso">SITUACIÓN</div>
         <p>Un portal viejo, de solo lectura, con veinte años de datos adentro. Los vencimientos,
-        los reclamos de proveedores y las órdenes que quedaron abiertas no avisan: hay que
-        acordarse de ir a buscarlos. Y los mismos proveedores, rubros y artículos llegan escritos
-        de varias formas distintas, así que ningún total cierra del todo.</p>
+        los reclamos de proveedores y las órdenes abiertas no tienen sistema de notificación
+        automatizado. Proveedores, rubros y artículos llegan escritos en varias formas distintas,
+        así que ningún total cierra del todo.</p>
       </div>
       <div class="parte">
         <div class="paso">PROPUESTA</div>
-        <p>Un sistema que lee los documentos con OCR, venga foto, PDF o planilla; avisa por
-        WhatsApp o Telegram en el momento en que una regla se dispara; y consolida solo los datos
-        repetidos, dejando a la vista, y sin sumar, lo que no puede resolver por su cuenta.</p>
+        <p>Un sistema que lee los documentos con inteligencia artificial y OCR, venga foto, PDF,
+        planilla o texto; automatiza las alertas al personal por WhatsApp o Telegram cuando un
+        evento tiene importancia; consolida los datos repetidos; y deja a revisión pendiente lo
+        que no pudo resolver automáticamente.</p>
       </div>
     </div>
     <div class="cifras">
-      <div class="cifra"><b>100</b><span>facturas cargadas: 46 son fotos escaneadas y las lee el OCR</span></div>
+      <div class="cifra"><b>100</b><span>facturas cargadas desde el portal viejo</span></div>
       <div class="cifra"><b>8</b><span>proveedores reales detrás de 24 formas distintas de escribirlos</span></div>
-      <div class="cifra"><b>18</b><span>herramientas del agente. Cada rol ve solo las suyas</span></div>
-      <div class="cifra"><b>110 → 4</b><span>avisos generados y mensajes efectivamente enviados</span></div>
+      <div class="cifra"><b>46</b><span>llegaron como foto escaneada y las lee el OCR</span></div>
+      <div class="cifra"><b>110 → 4</b><span>eventos detectados y mensajes efectivamente enviados</span></div>
     </div>
   </div>
 </header>
@@ -231,115 +231,116 @@ footer .env p{max-width:60ch}
   <div class="env">
     <div class="cabeza"><span class="num">01</span><h2>Todo el sistema en un dibujo</h2></div>
     <p class="bajada">
-      Cuatro pasos. Entra algo, se lee, se ordena y se guarda, y recién ahí se usa. Lo que el
-      sistema no puede resolver solo no se inventa: se aparta y espera una decisión de una persona.
+      Cuatro pasos. Entra algo, se automatiza la lectura, se ordena y se guarda, y desde ahí el
+      agente trabaja solo: el equipo se entera sin ir a buscar nada. En teal, el camino de los
+      papeles y los datos; en ámbar, el de las personas y los avisos.
     </p>
 
     <div class="lienzo">
-      <svg viewBox="0 0 1180 600" role="img" aria-label="Diagrama del sistema en cuatro etapas: entra, se lee, se ordena y se guarda, se usa">
+      <svg viewBox="0 0 1180 580" role="img" aria-label="Diagrama en cuatro etapas: entra, se lee, se ordena y se guarda, automatizacion agentica">
+        <!-- referencia -->
+        <rect class="d-datos" x="20" y="13" width="12" height="12"/>
+        <text class="d-ref" x="40" y="23">el camino de los papeles y los datos</text>
+        <rect class="d-gente" x="300" y="13" width="12" height="12"/>
+        <text class="d-ref" x="320" y="23">el camino de las personas y los avisos</text>
+
         <!-- etapas -->
-        <text class="d-etapa" x="20"  y="24">1 · ENTRA</text>
-        <text class="d-etapa" x="310" y="24">2 · SE LEE</text>
-        <text class="d-etapa" x="610" y="24">3 · SE ORDENA Y SE GUARDA</text>
-        <text class="d-etapa" x="925" y="24">4 · SE USA</text>
-        <line class="d-columna" x1="290" y1="36" x2="290" y2="500"/>
-        <line class="d-columna" x1="590" y1="36" x2="590" y2="500"/>
-        <line class="d-columna" x1="905" y1="36" x2="905" y2="500"/>
+        <text class="d-etapa" x="20"  y="52">1 · ENTRA</text>
+        <text class="d-etapa" x="312" y="52">2 · SE AUTOMATIZA</text>
+        <text class="d-etapa" x="612" y="52">3 · SE ORDENA Y SE GUARDA</text>
+        <text class="d-etapa" x="925" y="52">4 · AUTOMATIZACIÓN AGÉNTICA</text>
+        <line class="d-columna" x1="290" y1="64" x2="290" y2="470"/>
+        <line class="d-columna" x1="590" y1="64" x2="590" y2="470"/>
+        <line class="d-columna" x1="905" y1="64" x2="905" y2="470"/>
 
-        <!-- ENTRA -->
-        <rect class="d-caja" x="20" y="52" width="248" height="76"/>
-        <text class="d-titulo" x="38" y="80">Foto · PDF · Excel · Texto</text>
-        <text class="d-sub" x="38" y="101">Lo que manda el proveedor,</text>
-        <text class="d-sub" x="38" y="117">como se le ocurra mandarlo</text>
+        <!-- 1 · ENTRA -->
+        <rect class="d-datos" x="20" y="72" width="248" height="76"/>
+        <text class="d-titulo" x="38" y="100">Foto · PDF · Excel · Texto</text>
+        <text class="d-sub" x="38" y="121">Lo que manda el proveedor,</text>
+        <text class="d-sub" x="38" y="137">como se le ocurra mandarlo</text>
 
-        <rect class="d-caja" x="20" y="152" width="248" height="76"/>
-        <text class="d-titulo" x="38" y="180">Portal viejo</text>
-        <text class="d-sub" x="38" y="201">Nueve listados de solo lectura</text>
-        <text class="d-sub" x="38" y="217">y archivos con enlace de 45 s</text>
+        <rect class="d-datos" x="20" y="184" width="248" height="76"/>
+        <text class="d-titulo" x="38" y="212">Portal viejo</text>
+        <text class="d-sub" x="38" y="233">Nueve listados de solo lectura</text>
+        <text class="d-sub" x="38" y="249">y archivos para descargar</text>
 
-        <rect class="d-caja" x="20" y="252" width="248" height="76"/>
-        <text class="d-titulo" x="38" y="280">Una persona pregunta</text>
-        <text class="d-sub" x="38" y="301">Desde la pantalla, o desde</text>
-        <text class="d-sub" x="38" y="317">WhatsApp o Telegram</text>
+        <rect class="d-gente" x="20" y="294" width="248" height="76"/>
+        <text class="d-titulo" x="38" y="322">Una persona pregunta</text>
+        <text class="d-sub" x="38" y="343">Desde la pantalla, o desde</text>
+        <text class="d-sub" x="38" y="359">WhatsApp o Telegram</text>
 
-        <!-- flechas 1 -> 2 -->
-        <path class="d-flecha" d="M268 90 H305 M296 85 l9 5 -9 5"/>
-        <path class="d-flecha" d="M268 190 H305 M296 185 l9 5 -9 5"/>
-        <path class="d-flecha" d="M268 290 H305 M296 285 l9 5 -9 5"/>
+        <path class="d-flecha-datos" d="M268 110 H305 M296 105 l9 5 -9 5"/>
+        <path class="d-flecha-datos" d="M268 222 H305 M296 217 l9 5 -9 5"/>
+        <path class="d-flecha-gente" d="M268 332 H305 M296 327 l9 5 -9 5"/>
 
-        <!-- SE LEE -->
-        <rect class="d-caja" x="312" y="52" width="258" height="76"/>
-        <text class="d-titulo" x="330" y="80">OCR y lectura</text>
-        <text class="d-sub" x="330" y="101">Decide por los bytes, no por la</text>
-        <text class="d-sub" x="330" y="117">extensión. Marca lo que no lee</text>
+        <!-- 2 · SE AUTOMATIZA -->
+        <rect class="d-datos" x="312" y="72" width="258" height="92"/>
+        <text class="d-titulo" x="330" y="98">OCR y lectura</text>
+        <text class="d-sub" x="330" y="119">Sea una imagen, un PDF o texto</text>
+        <text class="d-sub" x="330" y="135">plano, lo lee entero. El tipo de</text>
+        <text class="d-sub" x="330" y="151">archivo lo decide por los bytes</text>
 
-        <rect class="d-caja" x="312" y="152" width="258" height="76"/>
-        <text class="d-titulo" x="330" y="180">Sincronización</text>
-        <text class="d-sub" x="330" y="201">Cada 12 horas o a pedido.</text>
-        <text class="d-sub" x="330" y="217">Nada se pisa dos veces</text>
+        <rect class="d-datos" x="312" y="184" width="258" height="76"/>
+        <text class="d-titulo" x="330" y="212">Lectura del portal</text>
+        <text class="d-sub" x="330" y="233">Trae los listados completos cada</text>
+        <text class="d-sub" x="330" y="249">tantas horas, o cuando se lo piden</text>
 
-        <rect class="d-caja-fuerte" x="312" y="252" width="258" height="76"/>
-        <text class="d-titulo" x="330" y="280">Número validado + token</text>
-        <text class="d-sub" x="330" y="301">Quién es, qué rol tiene y hasta</text>
-        <text class="d-sub" x="330" y="317">cuándo. Sin token no existe</text>
+        <rect class="d-gente" x="312" y="294" width="258" height="76"/>
+        <text class="d-titulo" x="330" y="322">Número validado + token</text>
+        <text class="d-sub" x="330" y="343">Quién es, qué rol tiene y hasta</text>
+        <text class="d-sub" x="330" y="359">cuándo vale</text>
 
-        <!-- flechas 2 -> 3 -->
-        <path class="d-flecha" d="M570 90 H605 M596 85 l9 5 -9 5"/>
-        <path class="d-flecha" d="M570 190 H605 M596 185 l9 5 -9 5"/>
-        <path class="d-flecha-viva" d="M570 290 H605 M596 285 l9 5 -9 5"/>
+        <path class="d-flecha-datos" d="M570 118 H605 M596 113 l9 5 -9 5"/>
+        <path class="d-flecha-datos" d="M570 222 H605 M596 217 l9 5 -9 5"/>
 
-        <!-- SE ORDENA -->
-        <rect class="d-caja" x="612" y="52" width="270" height="76"/>
-        <text class="d-titulo" x="630" y="80">Normalizador</text>
-        <text class="d-sub" x="630" y="101">Fechas, montos, nombres, rubros.</text>
-        <text class="d-sub" x="630" y="117">Cada dato con su confianza</text>
+        <!-- 3 · SE ORDENA Y SE GUARDA -->
+        <rect class="d-datos" x="612" y="72" width="270" height="92"/>
+        <text class="d-titulo" x="630" y="98">Normalizador</text>
+        <text class="d-sub" x="630" y="119">Lleva todo al formato del sistema</text>
+        <text class="d-sub" x="630" y="135">sin perder nada: fechas, montos,</text>
+        <text class="d-sub" x="630" y="151">nombres y rubros. Junta lo repetido</text>
 
-        <rect class="d-caja-fuerte" x="612" y="152" width="270" height="90"/>
-        <text class="d-titulo" x="630" y="182">La base</text>
-        <text class="d-sub" x="630" y="203">Montos en centavos enteros.</text>
-        <text class="d-sub" x="630" y="219">Los saldos se calculan, no se guardan.</text>
-        <text class="d-sub" x="630" y="235">Cada dato sabe de dónde salió</text>
+        <rect class="d-datos" x="612" y="200" width="270" height="90"/>
+        <text class="d-titulo" x="630" y="228">La base</text>
+        <text class="d-sub" x="630" y="249">Montos en centavos enteros.</text>
+        <text class="d-sub" x="630" y="265">Los saldos se calculan, no se guardan.</text>
+        <text class="d-sub" x="630" y="281">Cada dato sabe de dónde salió</text>
 
-        <rect class="d-caja" x="612" y="266" width="270" height="76"/>
-        <text class="d-titulo" x="630" y="294">Cola de revisión</text>
-        <text class="d-sub" x="630" y="315">Lo que no se pudo resolver solo</text>
-        <text class="d-sub" x="630" y="331">espera acá. Nunca se adivina</text>
+        <path class="d-flecha-datos" d="M747 164 V192 M742 183 l5 9 5 -9"/>
 
-        <path class="d-flecha" d="M747 128 V148 M742 139 l5 9 5 -9"/>
-        <path class="d-flecha-corte" d="M747 242 V262 M742 253 l5 9 5 -9"/>
-        <text class="d-nota" x="758" y="258">duda</text>
+        <!-- 4 · AUTOMATIZACIÓN AGÉNTICA -->
+        <rect class="d-gente" x="925" y="72" width="235" height="110"/>
+        <text class="d-titulo" x="943" y="98">El agente</text>
+        <text class="d-sub" x="943" y="119">Consulta y actualiza la base</text>
+        <text class="d-sub" x="943" y="135">con sus herramientas.</text>
+        <text class="d-sub" x="943" y="157">No calcula, no interpreta</text>
+        <text class="d-sub" x="943" y="173">y no inventa.</text>
 
-        <!-- flecha 3 -> 4 -->
-        <path class="d-flecha" d="M882 190 H920 M911 185 l9 5 -9 5"/>
+        <rect class="d-gente" x="925" y="216" width="235" height="76"/>
+        <text class="d-titulo" x="943" y="244">Lista de eventos</text>
+        <text class="d-sub" x="943" y="265">Lo que vence, lo que falta, y lo</text>
+        <text class="d-sub" x="943" y="281">que quedó pendiente de revisión</text>
 
-        <!-- SE USA -->
-        <rect class="d-caja-fuerte" x="925" y="112" width="235" height="120"/>
-        <text class="d-titulo" x="943" y="140">El agente</text>
-        <text class="d-sub" x="943" y="161">18 herramientas que leen y</text>
-        <text class="d-sub" x="943" y="177">escriben en la base.</text>
-        <text class="d-sub" x="943" y="199">No calcula, no interpreta</text>
-        <text class="d-sub" x="943" y="215">y no inventa.</text>
+        <rect class="d-gente" x="925" y="316" width="235" height="76"/>
+        <text class="d-titulo" x="943" y="344">Lo ve el equipo</text>
+        <text class="d-sub" x="943" y="365">En la pantalla, y en el teléfono</text>
+        <text class="d-sub" x="943" y="381">por WhatsApp o Telegram</text>
 
-        <rect class="d-caja" x="925" y="256" width="235" height="60"/>
-        <text class="d-titulo" x="943" y="282">Pantalla web</text>
-        <text class="d-sub" x="943" y="302">Calendario, facturas, tablero</text>
+        <!-- la base alimenta al agente, y la persona validada le habla -->
+        <path class="d-flecha-datos" d="M882 245 H898 V107 H917 M908 102 l9 5 -9 5"/>
+        <path class="d-flecha-gente" d="M570 332 H910 V128 H917 M908 123 l9 5 -9 5"/>
+        <path class="d-flecha-gente" d="M1042 182 V212 M1037 203 l5 9 5 -9"/>
+        <path class="d-flecha-gente" d="M1042 292 V312 M1037 303 l5 9 5 -9"/>
 
-        <rect class="d-caja" x="925" y="332" width="235" height="76"/>
-        <text class="d-titulo" x="943" y="358">WhatsApp · Telegram</text>
-        <text class="d-sub" x="943" y="379">Respuestas y avisos, a quien</text>
-        <text class="d-sub" x="943" y="395">esté asignado a escucharlos</text>
-
-        <path class="d-flecha" d="M1042 232 V244 H912 V286 H919 M910 281 l9 5 -9 5"/>
-        <path class="d-flecha" d="M912 286 V370 H919 M910 365 l9 5 -9 5"/>
-        <!-- vuelta del canal al ingreso -->
-        <path class="d-flecha-viva" d="M925 392 H886 V470 H144 V332 M139 341 l5 -9 5 9"/>
-        <text class="d-nota" x="430" y="465">la respuesta vuelve por donde entró la pregunta</text>
+        <!-- la respuesta vuelve por donde entro la pregunta -->
+        <path class="d-flecha-gente" d="M925 354 H890 V440 H144 V376 M139 385 l5 -9 5 9"/>
+        <text class="d-nota" x="430" y="435">la respuesta vuelve por donde entró la pregunta</text>
 
         <!-- banda inferior -->
-        <rect class="d-caja" x="20" y="506" width="1140" height="72"/>
-        <text class="d-titulo" x="40" y="532">El rol de quien pregunta decide qué herramientas existen</text>
-        <text class="d-sub" x="40" y="553">Ventas no tiene la herramienta de pagos: no la ve, y si igual la pide, no está. El modelo nunca elige quién es el que pregunta.</text>
-        <text class="d-sub" x="40" y="569">El modelo puede correr en esta máquina o en la nube: son dos variables de configuración y el resto del sistema no se entera.</text>
+        <rect class="d-caja" x="20" y="486" width="1140" height="76"/>
+        <text class="d-titulo" x="40" y="512">El rol de quien pregunta decide qué puede hacer el agente</text>
+        <text class="d-sub" x="40" y="533">Ventas no ve las herramientas de pagos: no aparecen, y si igual las pide, no están. El modelo nunca elige quién es el que pregunta.</text>
+        <text class="d-sub" x="40" y="549">El modelo puede correr en esta máquina o en la nube: son dos variables de configuración y el resto del sistema no se entera.</text>
       </svg>
     </div>
   </div>
@@ -364,7 +365,7 @@ footer .env p{max-width:60ch}
         <img src="img/factura-escaneada.jpg" width="900" height="507" alt="Factura F-9936 escaneada, tal como llega del proveedor">
       </div>
       <div class="celda">
-        <div class="paso">LO QUE SALE, EN 0,9 SEGUNDOS</div>
+        <div class="paso">LO QUE SALE</div>
         <div class="tabla-marco" style="border:0">
           <table>
             <tr><th>Campo</th><th>Valor</th><th>Confianza</th></tr>
@@ -424,7 +425,7 @@ footer .env p{max-width:60ch}
 
     <div class="rejilla r4" style="margin-bottom:36px">
       <div class="celda"><div class="paso">1</div><h3>Entiende</h3><p>"registrá 200 mil en la F-7797" es un pago, no una consulta.</p></div>
-      <div class="celda"><div class="paso">2</div><h3>Elige</h3><p>De sus 18 herramientas toma la que corresponde, con los argumentos ya normalizados.</p></div>
+      <div class="celda"><div class="paso">2</div><h3>Elige</h3><p>Toma la herramienta que corresponde, con los argumentos ya normalizados.</p></div>
       <div class="celda"><div class="paso">3</div><h3>La base responde</h3><p>La herramienta valida y devuelve el dato real. Si algo no cierra, devuelve el motivo.</p></div>
       <div class="celda"><div class="paso">4</div><h3>Cuenta qué hizo</h3><p>Contesta en palabras y deja el rastro completo, con quién lo pidió.</p></div>
     </div>
@@ -538,7 +539,7 @@ consultar_ventas, consultar_productos</div>
         <ul class="puntos">
           <li>Llega un mensaje al número del sistema.</li>
           <li>Se busca el token de ese teléfono. <b>Si no hay token, ahí termina</b>: se contesta que el número no está habilitado y no se toca la base.</li>
-          <li>El token dice que es Marcela, rol compras. El agente se arma con las 16 herramientas de compras. Las otras dos no existen en esa conversación.</li>
+          <li>El token dice que es Marcela, rol compras. El agente se arma solo con las herramientas de compras. Las demás no existen en esa conversación.</li>
           <li>Marcela escribe "cuánto le debemos a Cuyo". El agente elige la herramienta, la base contesta, y la respuesta vuelve por WhatsApp.</li>
           <li>Si manda una foto de una factura, el mismo OCR la lee y le contesta qué entendió y qué no, antes de cargar nada.</li>
           <li>Todo lo que se escribe queda registrado a nombre de Marcela, igual que si lo hubiera hecho desde la pantalla.</li>
@@ -589,7 +590,7 @@ consultar_ventas, consultar_productos</div>
       <div class="celda" style="background:var(--panel-2);border-left:2px solid var(--acento)">
         <div class="paso">CAG · lo que hace este sistema</div>
         <h3>Preguntarle a la base y que la base conteste</h3>
-        <p>El modelo no busca: elige una de 18 herramientas y la base devuelve el resultado ya
+        <p>El modelo no busca: elige la herramienta que corresponde y la base devuelve el resultado ya
         calculado. Ese resultado entra al contexto del modelo, que solo lo pone en palabras.</p>
         <p>El dato es el de este segundo, no el de la última indexación. Y el número no lo sumó el
         modelo, así que se puede verificar corriendo la misma consulta a mano.</p>
@@ -611,11 +612,11 @@ consultar_ventas, consultar_productos</div>
     <div class="rejilla r2">
       <div class="celda">
         <h3>Qué es "el toolkit"</h3>
-        <p>Las 18 herramientas son las preguntas que el negocio se hace de verdad, escritas una vez
+        <p>Las herramientas son las preguntas que el negocio se hace de verdad, escritas una vez
         y bien: posición de cuenta de un proveedor, deuda total, cumplimiento de plazos, facturas
         por estado, recibos que faltan, calendario del período, órdenes olvidadas, ventas por mes,
-        productos por stock, y las cinco que escriben (pagar, emitir recibo, ajustar monto,
-        resolver revisión, cerrar mensaje).</p>
+        productos por stock, y las que escriben (pagar, emitir recibo, ajustar monto, resolver un
+        pendiente, cerrar un mensaje).</p>
         <p>Sumar una pregunta nueva es sumar una herramienta, no reentrenar ni reindexar nada.</p>
       </div>
       <div class="celda">
@@ -782,15 +783,16 @@ consultar_ventas, consultar_productos</div>
     <div class="rejilla r2" style="margin-bottom:24px">
       <div class="celda" style="border-left:2px solid var(--ambar)">
         <div class="paso" style="color:var(--ambar)">EL COSTO PRINCIPAL</div>
-        <h3>Migrar la estructura actual, pasando por los casos borde más duros</h3>
+        <h3>El grueso del trabajo es la migración, y se paga una sola vez</h3>
         <p>Leer el portal y dibujar pantallas es la parte visible y no es la cara. Lo caro es que
         veinte años de datos escritos a mano entren en una estructura que no miente.</p>
         <p>Ahí están los nombres escritos de cinco formas, los importes con dos columnas candidatas,
         las fechas que no existen, los códigos repetidos con cantidades distintas, el CUIT que en
         realidad es del cliente. Cada uno de esos casos hay que verlo, decidirlo con el cliente y
-        dejarlo escrito como regla.</p>
-        <p>Es un trabajo de descubrimiento con el cliente al lado, no de programación a solas.
-        Se cotiza por caso resuelto y se avanza por conjunto de datos, no de una.</p>
+        dejarlo escrito como regla. Es un trabajo de descubrimiento con el cliente al lado.</p>
+        <p><b>Después no se repite.</b> Con los datos adentro y las reglas escritas, lo que llega de
+        acá en adelante entra solo: la factura nueva, el documento nuevo y el proveedor nuevo caen
+        en la misma estructura sin trabajo adicional.</p>
       </div>
       <div class="celda">
         <div class="paso">CÓMO SE ACHICA ESE COSTO</div>
@@ -812,7 +814,7 @@ consultar_ventas, consultar_productos</div>
           <td>Nada. Corre con los datos reales.</td>
         </tr>
         <tr>
-          <td><b>OCR de facturas y agente con sus 18 herramientas</b></td>
+          <td><b>OCR de facturas y agente con sus herramientas</b></td>
           <td><span class="chapa anda">andando</span></td>
           <td>Hoy se usan por la interfaz de programación. Falta la pantalla para subir un archivo arrastrándolo y el chat dentro del sistema.</td>
         </tr>
