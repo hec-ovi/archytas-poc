@@ -106,7 +106,7 @@ p+p{margin-top:12px}
 .r2{grid-template-columns:repeat(2,1fr)}
 .r3{grid-template-columns:repeat(3,1fr)}
 .r4{grid-template-columns:repeat(4,1fr)}
-.celda{background:var(--panel);padding:24px}
+.celda{background:var(--panel);padding:24px;min-width:0}
 .celda p{font-size:15px;color:var(--tinta-media)}
 .celda .paso{font-family:var(--mono);font-size:11px;color:var(--acento);letter-spacing:.14em;margin-bottom:12px}
 @media(max-width:900px){.r3,.r4{grid-template-columns:repeat(2,1fr)}}
@@ -165,7 +165,7 @@ ul.puntos li b{color:var(--tinta);font-weight:600}
 /* ---------- capturas ---------- */
 .galeria{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
 @media(max-width:760px){.galeria{grid-template-columns:1fr}}
-figure{border:1px solid var(--linea);background:var(--panel)}
+figure{border:1px solid var(--linea);background:var(--panel);min-width:0}
 figure img{border-bottom:1px solid var(--linea)}
 figcaption{padding:14px 18px;font-size:14px;color:var(--tinta-media)}
 figcaption b{color:var(--tinta);display:block;font-family:var(--display);font-size:15px;font-weight:600;margin-bottom:2px}
