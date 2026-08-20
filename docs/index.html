@@ -65,7 +65,7 @@ a:hover{border-bottom-color:var(--acento)}
 @media(max-width:860px){.barra nav{display:none}}
 
 /* ---------- portada ---------- */
-.portada{padding:88px 0 56px;border-bottom:1px solid var(--linea)}
+.portada{padding:88px 0 72px;border-bottom:1px solid var(--linea)}
 .ojo{
   font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--acento);margin-bottom:22px;
@@ -82,14 +82,6 @@ h1{
 .parte{background:var(--panel);padding:24px;min-width:0}
 .parte p{color:var(--tinta-media);font-size:16px}
 @media(max-width:760px){.marco{grid-template-columns:1fr}}
-.cifras{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
-  background:var(--linea);border:1px solid var(--linea);margin-top:48px;
-}
-.cifra{background:var(--fondo-2);padding:20px}
-.cifra b{display:block;font-family:var(--display);font-size:30px;font-weight:700;letter-spacing:-.01em}
-.cifra span{display:block;font-size:13px;color:var(--tinta-suave);margin-top:4px;line-height:1.35}
-@media(max-width:760px){.cifras{grid-template-columns:repeat(2,1fr)}}
 
 /* ---------- secciones ---------- */
 section{padding:72px 0;border-bottom:1px solid var(--linea)}
@@ -217,12 +209,6 @@ footer .env p{max-width:60ch}
         que no pudo resolver automáticamente.</p>
       </div>
     </div>
-    <div class="cifras">
-      <div class="cifra"><b>100</b><span>facturas cargadas desde el portal viejo</span></div>
-      <div class="cifra"><b>8</b><span>proveedores reales detrás de 24 formas distintas de escribirlos</span></div>
-      <div class="cifra"><b>46</b><span>llegaron como foto escaneada y las lee el OCR</span></div>
-      <div class="cifra"><b>110 → 4</b><span>eventos detectados y mensajes efectivamente enviados</span></div>
-    </div>
   </div>
 </header>
 
@@ -232,8 +218,8 @@ footer .env p{max-width:60ch}
     <div class="cabeza"><span class="num">01</span><h2>Todo el sistema en un dibujo</h2></div>
     <p class="bajada">
       Cuatro pasos. Entra algo, se automatiza la lectura, se ordena y se guarda, y desde ahí el
-      agente trabaja solo: el equipo se entera sin ir a buscar nada. En teal, el camino de los
-      papeles y los datos; en ámbar, el de las personas y los avisos.
+      agente trabaja solo: el equipo se entera sin ir a buscar nada. Hay dos caminos marcados con
+      color: en verde, los papeles y los datos; en amarillo, las personas y los avisos.
     </p>
 
     <div class="lienzo">
