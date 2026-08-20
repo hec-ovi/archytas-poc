@@ -43,8 +43,8 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 img{max-width:100%;height:auto;display:block}
-.celda-imagen{padding:0;display:flex}
-.celda-imagen img{width:100%;object-fit:cover}
+.celda-imagen{padding:0;display:flex;align-items:center}
+.celda-imagen img{width:100%;height:auto}
 a{color:var(--acento);text-decoration:none;border-bottom:1px solid rgba(95,188,196,.35)}
 a:hover{border-bottom-color:var(--acento)}
 .env{max-width:var(--ancho);margin:0 auto;padding:0 24px}
@@ -370,11 +370,11 @@ footer .env p{max-width:60ch}
 
     <div class="rejilla r3">
       <div class="celda">
-        <div class="paso">CUANDO NO PUEDE</div>
-        <h3>Avisa, no adivina</h3>
-        <p>Si hay dos importes candidatos, no elige ninguno: deja los dos a la vista y lo manda a
-        revisión. Un campo dudoso frenado hoy vale menos que un número inventado descubierto
-        dentro de seis meses.</p>
+        <div class="paso">CUANDO LA AUTOMATIZACIÓN FALLA</div>
+        <h3>El agente lo manda como alerta a revisión</h3>
+        <p>Pasa en el momento en que el archivo se carga, que es cuando el dato se consolida contra
+        lo que ya está en la base. Si hay dos importes candidatos, el agente no elige ninguno: deja
+        los dos a la vista y manda el aviso, con el motivo.</p>
       </div>
       <div class="celda">
         <div class="paso">DE DÓNDE SALIÓ</div>
@@ -385,10 +385,10 @@ footer .env p{max-width:60ch}
       </div>
       <div class="celda">
         <div class="paso">SUBIR</div>
-        <h3>Un archivo, ningún formulario</h3>
-        <p>Entra el archivo tal como está y el sistema saca los campos. El mismo archivo subido dos
-        veces se reconoce por su huella y no se carga de nuevo. Nadie tipea un número de factura que
-        ya está impreso en el papel.</p>
+        <h3>Una base de datos sin formularios</h3>
+        <p>Los archivos que entran al sistema los agrega el agente. Entra el archivo tal como está,
+        el agente saca los campos y los carga. El mismo archivo subido dos veces se reconoce por su
+        huella y no se carga de nuevo.</p>
         <p style="margin-top:14px"><span class="chapa viene">lo que viene</span> la pantalla para
         soltarlo arrastrando, y el mismo camino cuando la foto llega por WhatsApp.</p>
       </div>
@@ -405,17 +405,16 @@ footer .env p{max-width:60ch}
       <span class="chapa anda">andando</span>
     </div>
     <p class="bajada">
-      La regla es una sola: <b>el modelo no calcula, no interpreta y no inventa.</b> Entiende lo que
-      le pedís y elige una herramienta. El número lo devuelve la base. Toda respuesta viaja con el
-      rastro de qué herramienta corrió y con qué argumentos, así que se puede revisar sin
-      creerle nada.
+      <b>El agente no calcula: las herramientas calculan por él.</b> El agente solo elige y usa la
+      herramienta que corresponde. Todo queda registrado, para auditar después y para validar los
+      casos borde.
     </p>
 
     <div class="rejilla r4" style="margin-bottom:36px">
       <div class="celda"><div class="paso">1</div><h3>Entiende</h3><p>"registrá 200 mil en la F-7797" es un pago, no una consulta.</p></div>
       <div class="celda"><div class="paso">2</div><h3>Elige</h3><p>Toma la herramienta que corresponde, con los argumentos ya normalizados.</p></div>
       <div class="celda"><div class="paso">3</div><h3>La base responde</h3><p>La herramienta valida y devuelve el dato real. Si algo no cierra, devuelve el motivo.</p></div>
-      <div class="celda"><div class="paso">4</div><h3>Cuenta qué hizo</h3><p>Contesta en palabras y deja el rastro completo, con quién lo pidió.</p></div>
+      <div class="celda"><div class="paso">4</div><h3>Muestra el resultado</h3><p>Contesta en palabras, para aprobar lo que se va a agregar a la base, y deja el rastro completo.</p></div>
     </div>
 
     <h3 style="margin-bottom:14px">Tres conversaciones reales, tal como salieron</h3>
