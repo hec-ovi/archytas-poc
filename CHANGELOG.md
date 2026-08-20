@@ -28,3 +28,6 @@ Sistema completo de gestion para Ferreteria Industrial Cordillera.
   separadas del lado del servidor.
 - **Agente** sobre modelo local compatible con OpenAI, con herramientas para cargar,
   consultar y actualizar, y el rastro de que hizo en cada respuesta.
+- **Pagina publica** en `docs/index.html`, servida con GitHub Pages: el diagrama del sistema,
+  el OCR sobre una factura real, conversaciones del agente con su rastro, la propuesta de
+  WhatsApp con permisos por numero, por que CAG en lugar de RAG, y los limites.

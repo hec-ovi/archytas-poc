@@ -26,6 +26,13 @@ contrato: nadie lee el codigo de otra caja.
 |---|---|---|
 | `web` | UI en React sobre Vite. Una sub-caja por pantalla: `login`, `tablero`, `proveedores`, `facturas`, `calendario`, `ordenes`, `ventas`, `productos`, `revision`, `mensajes`, `configuracion`. Debajo, `ui` (los componentes comunes) y `lib` (cliente HTTP, formato y canal en vivo). | contrato de `api` |
 
+## La pagina publica
+
+`docs/index.html` (mas `docs/img/`) es una pagina sola, sin dependencias, que explica el
+sistema para mostrarlo: el diagrama de las cuatro etapas, el OCR con una factura real, tres
+conversaciones del agente tal como salieron, la propuesta de WhatsApp con permisos por
+numero, por que CAG y no RAG, y los limites. Se publica con GitHub Pages desde esta carpeta.
+
 ## Como leerlo
 
 Para entender o cambiar algo: este mapa, y despues el `CONTRACT.md` de la caja que toca. El
