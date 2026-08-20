@@ -589,67 +589,25 @@ consultar_ventas, consultar_productos</div>
   </div>
 </section>
 
-<!-- ══════════════ 06 LOCAL O NUBE ══════════════ -->
-<section id="modelo">
-  <div class="env">
-    <div class="cabeza">
-      <span class="num">06</span>
-      <h2>El modelo: acá adentro o en la nube</h2>
-      <span class="chapa anda">andando</span>
-    </div>
-    <p class="bajada">
-      El agente habla con cualquier servidor compatible con OpenAI. Cambiar de un modelo corriendo
-      en una máquina local a uno en la nube son <b>dos variables de configuración</b>: el contrato
-      del agente es el mismo en los dos casos.
-    </p>
-    <div class="rejilla r2">
-      <div class="celda">
-        <div class="paso">LOCAL</div>
-        <h3>Corre en una máquina del negocio</h3>
-        <ul class="puntos">
-          <li><b>Ningún dato sale.</b> Las facturas y los saldos no cruzan la puerta.</li>
-          <li><b>Costo fijo.</b> Se paga la máquina una vez, no cada pregunta.</li>
-          <li><b>Sigue andando sin internet</b>, salvo la sincronización con el portal.</li>
-          <li>Pide una placa decente y alguien que la prenda. Los modelos chicos entienden bien las órdenes, pero razonan menos que los grandes.</li>
-        </ul>
-      </div>
-      <div class="celda">
-        <div class="paso">NUBE</div>
-        <h3>Un proveedor externo</h3>
-        <ul class="puntos">
-          <li><b>Arranca hoy</b>, sin hardware ni instalación.</li>
-          <li><b>El modelo más capaz disponible</b>, y se cambia el día que sale uno mejor.</li>
-          <li>Se paga por uso y los datos de la pregunta salen a un tercero.</li>
-          <li>Si se cae internet, el agente queda mudo. La pantalla y los datos siguen funcionando.</li>
-        </ul>
-      </div>
-    </div>
-    <p style="margin-top:24px;color:var(--tinta-suave);font-size:14px">
-      Un detalle que sí importa: el modelo local que se está usando no ve imágenes. Por eso las
-      facturas escaneadas pasan por OCR y nunca se le mandan como foto. Esa decisión es la que
-      mantiene el resultado igual con cualquier modelo, chico o grande.
-    </p>
-  </div>
-</section>
-
-<!-- ══════════════ 07 AVISOS ══════════════ -->
+<!-- ══════════════ 06 AVISOS ══════════════ -->
 <section id="avisos">
   <div class="env">
     <div class="cabeza">
-      <span class="num">07</span>
+      <span class="num">06</span>
       <h2>Avisos, y quién los recibe</h2>
       <span class="chapa anda">andando</span>
     </div>
     <p class="bajada">
-      Cinco reglas miran los datos solas: vence pronto, factura sin recibo, orden de compra
-      olvidada, reclamo sin responder, datos esperando revisión. En la última pasada dispararon
-      <b>110 eventos</b> y salieron <b>4 mensajes</b>, porque cuando una regla se dispara muchas
-      veces manda un resumen en vez de llenar el teléfono.
+      Sistema flexible: se suman reglas, automatizaciones y eventos nuevos sin tocar el resto. Las
+      primeras que se proponen cubren facturas, órdenes de compra, reclamos de proveedores y datos
+      pendientes de revisión: vence pronto, factura sin recibo, orden olvidada, reclamo sin
+      responder. Cuando una regla se dispara muchas veces manda un resumen, en vez de llenar el
+      teléfono.
     </p>
 
     <div class="rejilla r2" style="margin-bottom:32px">
       <div class="celda">
-        <div class="paso">UN AVISO REAL DE LA ÚLTIMA PASADA</div>
+        <div class="paso">EJEMPLO DE AVISO</div>
         <div class="consola" style="border:0;background:transparent">
           <div class="fila" style="padding:0;border:0">
             <div class="dice">69 facturas vencidas con saldo, por $22.329.634,00<br><br>
@@ -665,23 +623,21 @@ consultar_ventas, consultar_productos</div>
         <div class="paso">QUIÉN LO RECIBE</div>
         <h3>Cada regla tiene su gente</h3>
         <p>Los vencimientos y los reclamos van a compras. Las órdenes olvidadas, a quien las pide.
-        Los totales del mes, a la dirección. Se asigna por regla, no todo a todos, y se cambia desde
-        la pantalla de configuración.</p>
-        <p>Con qué anticipación avisar, desde qué monto, y cada cuántas horas se actualiza también
-        son parámetros de esa pantalla: nadie toca un archivo para cambiar de siete a diez días.</p>
-        <p style="margin-top:16px;color:var(--tinta-suave);font-size:14px">
-          Sin credenciales cargadas nada se pierde: el aviso queda en la bandeja del sistema y se
-          entrega igual cuando el canal está listo.</p>
+        Los totales del mes, a la dirección. Se asigna por regla, no todo a todos.</p>
+        <p>Quién escucha cada regla, con qué anticipación avisar, desde qué monto y cada cuántas
+        horas se actualiza los cambia el dueño pidiéndoselo al agente: "avisá con diez días en vez
+        de siete", y queda hecho, con su nombre y la fecha.
+        <span class="chapa viene">lo que viene</span></p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ 08 CAPTURAS ══════════════ -->
+<!-- ══════════════ 07 CAPTURAS ══════════════ -->
 <section id="pantallas">
   <div class="env">
     <div class="cabeza">
-      <span class="num">08</span>
+      <span class="num">07</span>
       <h2>Lo que se ve hoy</h2>
       <span class="chapa anda">andando</span>
     </div>
@@ -726,11 +682,11 @@ consultar_ventas, consultar_productos</div>
   </div>
 </section>
 
-<!-- ══════════════ 09 LÍMITES ══════════════ -->
+<!-- ══════════════ 08 LÍMITES ══════════════ -->
 <section id="limites">
   <div class="env">
     <div class="cabeza">
-      <span class="num">09</span>
+      <span class="num">08</span>
       <h2>Límites y costo real</h2>
     </div>
     <p class="bajada">
