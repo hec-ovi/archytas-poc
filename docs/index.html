@@ -13,7 +13,6 @@
   --fondo:#0f1211;
   --fondo-2:#141817;
   --panel:#1a1f1e;
-  --panel-2:#202625;
   --linea:#2a3130;
   --linea-fuerte:#3c4442;
   --tinta:#eef1ee;
@@ -489,10 +488,9 @@ consultar_ventas, consultar_productos</div>
       <span class="chapa viene">lo que viene</span>
     </div>
     <p class="bajada">
-      El canal de salida ya está construido: los avisos salen por WhatsApp o Telegram apenas se
-      cargan las credenciales. Lo que se agrega es la vuelta completa, que la gente le
-      <b>escriba</b> al sistema desde el teléfono que ya usa todo el día, sin abrir la computadora
-      y sin aprender nada nuevo.
+      La propuesta es la automatización completa del sistema desde el teléfono. Requiere un número
+      de teléfono y un chip dedicado para vincular WhatsApp. Si eso no es posible, Telegram se
+      implementa sin chip.
     </p>
 
     <div class="rejilla r3" style="margin-bottom:32px">
@@ -507,8 +505,8 @@ consultar_ventas, consultar_productos</div>
         <div class="paso">PASO 2</div>
         <h3>El número se valida</h3>
         <p>La persona escribe una vez y recibe un código de seis dígitos. Lo devuelve y el número
-        queda probado: es de quien dice ser. Sin ese paso el número es un desconocido, y a un
-        desconocido no se le contesta nada.</p>
+        queda probado. Sin ese paso el número es un desconocido, y a un desconocido no se le
+        contesta nada.</p>
       </div>
       <div class="celda">
         <div class="paso">PASO 3</div>
@@ -533,7 +531,7 @@ consultar_ventas, consultar_productos</div>
         </ul>
       </div>
       <div class="celda">
-        <div class="paso">POR QUÉ ATAR EL PERMISO AL NÚMERO</div>
+        <div class="paso">SEGURIDAD DE IDENTIDAD</div>
         <h3>El teléfono como identidad</h3>
         <p>En una ferretería nadie quiere un usuario y una clave más. El teléfono ya está en el
         bolsillo, ya está probado por el propio WhatsApp, y ya se sabe de quién es.</p>
@@ -560,50 +558,22 @@ consultar_ventas, consultar_productos</div>
     </div>
     <p class="bajada">
       RAG parte los documentos en pedazos, los guarda en un índice y le acerca al modelo los que
-      se parecen a la pregunta. Para prosa funciona bien. Para una ferretería el problema es otro:
-      acá la pregunta es "cuánto le debo", y eso se resuelve con una suma con corte sobre datos
-      estructurados. Por eso el modelo consulta la base en lugar de leer textos parecidos.
+      se parecen a la pregunta. Para eso necesita <b>dos modelos extra</b>: uno de embedding, que
+      convierte el texto en números, y uno de rerank, que reordena lo que encontró. CAG no usa
+      ninguno de los dos: el sistema inyecta directamente los datos que hacen falta, con
+      herramientas que consultan la base.
     </p>
-
-    <div class="rejilla r2" style="margin-bottom:32px">
-      <div class="celda">
-        <div class="paso">RAG</div>
-        <h3>Buscar en una pila de fotocopias</h3>
-        <p>Se sacan fotocopias de todo, se guardan por parecido, y cuando alguien pregunta se le
-        acercan las diez que más se parecen. El modelo lee esas diez y arma un número él mismo.</p>
-        <p>Si una factura se pagó ayer, la fotocopia sigue diciendo lo de antes hasta que se
-        vuelva a sacar. Y si la respuesta estaba en la fotocopia once, no aparece.</p>
-      </div>
-      <div class="celda" style="background:var(--panel-2);border-left:2px solid var(--acento)">
-        <div class="paso">CAG · lo que hace este sistema</div>
-        <h3>Preguntarle a la base y que la base conteste</h3>
-        <p>El modelo no busca: elige la herramienta que corresponde y la base devuelve el resultado ya
-        calculado. Ese resultado entra al contexto del modelo, que solo lo pone en palabras.</p>
-        <p>El dato es el de este segundo, no el de la última indexación. Y el número no lo sumó el
-        modelo, así que se puede verificar corriendo la misma consulta a mano.</p>
-      </div>
-    </div>
-
-    <div class="tabla-marco" style="margin-bottom:32px">
-      <table>
-        <tr><th></th><th>RAG sobre los documentos</th><th>CAG con herramientas de base</th></tr>
-        <tr><td><b>De dónde sale el número</b></td><td>lo arma el modelo leyendo textos</td><td>lo calcula la base, el modelo lo lee</td></tr>
-        <tr><td><b>Si un dato cambia</b></td><td>hay que reindexar para que se entere</td><td>ya está: la consulta sale en el momento</td></tr>
-        <tr><td><b>Se puede auditar</b></td><td>hay que confiar en el resumen</td><td>queda la herramienta, los argumentos y el resultado</td></tr>
-        <tr><td><b>Preguntas de totales</b></td><td>frágiles: depende de qué pedazos entraron</td><td>exactas: es la consulta de siempre</td></tr>
-        <tr><td><b>Qué hay que mantener</b></td><td>índice, embeddings, reindexado, base vectorial</td><td>la base que ya existe y el catálogo de herramientas</td></tr>
-        <tr><td><b>Costo por pregunta</b></td><td>sube con el tamaño del contexto que se arrastra</td><td>bajo: entra el resultado, no los documentos</td></tr>
-      </table>
-    </div>
 
     <div class="rejilla r2">
       <div class="celda">
         <h3>Qué es "el toolkit"</h3>
-        <p>Las herramientas son las preguntas que el negocio se hace de verdad, escritas una vez
-        y bien: posición de cuenta de un proveedor, deuda total, cumplimiento de plazos, facturas
-        por estado, recibos que faltan, calendario del período, órdenes olvidadas, ventas por mes,
-        productos por stock, y las que escriben (pagar, emitir recibo, ajustar monto, resolver un
-        pendiente, cerrar un mensaje).</p>
+        <p>Las herramientas son las consultas a la base y los cálculos que salen de ella: deuda por
+        proveedor, cumplimiento de plazos, facturas por estado, recibos que faltan, ventas por mes,
+        stock. Se escriben con la matemática del sistema viejo, convertida en un contrato que el
+        agente puede usar.</p>
+        <p>El modelo solo traduce a palabras el resultado de esas herramientas deterministas. Y
+        reemplaza la carga manual por una automática, disponible las 24 horas y desde cualquier
+        lado, por WhatsApp o Telegram.</p>
         <p>Sumar una pregunta nueva es sumar una herramienta, no reentrenar ni reindexar nada.</p>
       </div>
       <div class="celda">
@@ -629,8 +599,8 @@ consultar_ventas, consultar_productos</div>
     </div>
     <p class="bajada">
       El agente habla con cualquier servidor compatible con OpenAI. Cambiar de un modelo corriendo
-      en una máquina del local a uno en la nube son <b>dos variables de configuración</b>. Ninguna
-      otra parte del sistema se entera, porque el contrato del agente no cambia.
+      en una máquina local a uno en la nube son <b>dos variables de configuración</b>: el contrato
+      del agente es el mismo en los dos casos.
     </p>
     <div class="rejilla r2">
       <div class="celda">
