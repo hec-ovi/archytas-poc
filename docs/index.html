@@ -158,18 +158,13 @@ ul.puntos li:before{content:"";position:absolute;left:0;top:19px;width:8px;heigh
 ul.puntos li b{color:var(--tinta);font-weight:600}
 
 /* ---------- capturas ---------- */
-.galeria{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
-@media(max-width:760px){.galeria{grid-template-columns:1fr}}
+.galeria{display:grid;grid-template-columns:1fr;gap:32px}
 figure{border:1px solid var(--linea);background:var(--panel);min-width:0}
 figure img{border-bottom:1px solid var(--linea)}
 figcaption{padding:14px 18px;font-size:14px;color:var(--tinta-media)}
 figcaption b{color:var(--tinta);display:block;font-family:var(--display);font-size:15px;font-weight:600;margin-bottom:2px}
-.ancha{grid-column:1/-1}
 
-/* ---------- pie ---------- */
-footer{padding:56px 0 72px;color:var(--tinta-suave);font-size:14px}
-footer .env{display:flex;gap:24px;flex-wrap:wrap;align-items:baseline}
-footer .env p{max-width:60ch}
+section:last-of-type{border-bottom:0;padding-bottom:96px}
 </style>
 </head>
 <body>
@@ -646,7 +641,7 @@ consultar_ventas, consultar_productos</div>
     </p>
 
     <div class="galeria">
-      <figure class="ancha">
+      <figure>
         <img src="img/tablero.jpg" width="1280" height="662" alt="Tablero con lo que necesita atención primero" loading="lazy">
         <figcaption><b>Tablero</b>Primero lo que necesita atención: qué vence, qué está sin recibo, qué órdenes quedaron abiertas y qué espera una decisión. Los totales van más abajo.</figcaption>
       </figure>
@@ -697,12 +692,8 @@ consultar_ventas, consultar_productos</div>
       <div class="celda" style="border-left:2px solid var(--ambar)">
         <div class="paso" style="color:var(--ambar)">EL GRUESO DEL TIEMPO DE DESARROLLO</div>
         <h3>La migración de los datos, y se hace una sola vez</h3>
-        <p>Leer el portal y dibujar pantallas es la parte visible y es la más rápida. El tiempo se
-        va en que veinte años de datos escritos a mano entren en una estructura que no miente.</p>
-        <p>Ahí están los nombres escritos de cinco formas, los importes con dos columnas candidatas,
-        las fechas que no existen, los códigos repetidos con cantidades distintas, el CUIT que en
-        realidad es del cliente. Cada uno de esos casos hay que verlo, decidirlo con el cliente y
-        dejarlo escrito como regla. Es un trabajo de descubrimiento con el cliente al lado.</p>
+        <p>La fricción está en la primera etapa: migrar los datos al sistema nuevo y adaptarlos.
+        Cada caso raro hay que verlo, decidirlo con el cliente y dejarlo escrito como regla.</p>
         <p><b>Después no se repite.</b> Con los datos adentro y las reglas escritas, lo que llega de
         acá en adelante entra solo: la factura nueva, el documento nuevo y el proveedor nuevo caen
         en la misma estructura sin trabajo adicional, y el portal viejo deja de hacer falta.</p>
@@ -711,9 +702,8 @@ consultar_ventas, consultar_productos</div>
         <div class="paso">CÓMO SE ACORTA ESE TIEMPO</div>
         <ul class="puntos">
           <li><b>Nada se descarta.</b> Cada fila cruda queda guardada tal como llegó, así que una regla nueva se puede aplicar sobre el pasado sin volver a pedir nada.</li>
-          <li><b>La cola de revisión es el termómetro.</b> Lo que aparece ahí es exactamente la lista de casos borde que faltan resolver, ordenada por cuánto molesta.</li>
           <li><b>Cada decisión se guarda.</b> Resolver un caso a mano lo resuelve para siempre, no solo esta vez.</li>
-          <li><b>Se puede arrancar con un conjunto.</b> Proveedores y facturas primero, que es donde está la plata; ventas y productos después.</li>
+          <li><b>Se puede arrancar con un conjunto.</b> Proveedores y facturas primero; ventas y productos después.</li>
         </ul>
       </div>
     </div>
@@ -755,19 +745,6 @@ consultar_ventas, consultar_productos</div>
     </div>
   </div>
 </section>
-
-<footer>
-  <div class="env">
-    <p>
-      Cordillera es una prueba de concepto sobre un cliente ficticio: una ferretería industrial con
-      un portal de solo lectura y doce problemas contados con sus palabras. El código, los contratos
-      de cada caja y la documentación técnica están en el repositorio.
-    </p>
-    <p style="margin-top:8px">
-      <a href="https://github.com/hec-ovi/archytas-poc">github.com/hec-ovi/archytas-poc</a>
-    </p>
-  </div>
-</footer>
 
 </body>
 </html>
